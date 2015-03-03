@@ -1,0 +1,20 @@
+{
+  "name": "kennslumat",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Homeblest/kennslumat",
+  "authors": [
+    "Hjalti Leifsson <Hjaltileifsson@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bootstrap": "~0.12.1",
+    "angular-ui-router": "~0.2.13"
+  }
+}
