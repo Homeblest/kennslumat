@@ -6,7 +6,7 @@ var gulp = require('gulp'),
     stylish = require('jshint-stylish');
 
 var paths = {
-	scripts: ['apps/**/*.js']
+	scripts: ['app/**/*.js', '!app/kennslumat.min.js']
 };
 
 gulp.task('default', function() {
@@ -37,5 +37,5 @@ gulp.task('default', function() {
         .pipe(ngAnnotate())
         .pipe(uglify())
         .pipe(concat('kennslumat.min.js'))
-        .pipe(gulp.dest('app/js'))
+        .pipe(gulp.dest('app'))
 });
