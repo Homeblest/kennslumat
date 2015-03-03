@@ -1,0 +1,1 @@
+var HR_Eval = angular.module('HR_Eval', ['ui.router', 'luegg.directives', 'ui.bootstrap']);
