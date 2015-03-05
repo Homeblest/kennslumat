@@ -1,2 +1,2 @@
-var kennslumat=angular.module("kennslumat",["ui.bootstrap"]);
+var kennslumat=angular.module("kennslumat",["ui.bootstrap","ui.router"]);kennslumat.config(["$stateProvider","$urlRouterProvider",function(e,t){t.otherwise("/login"),e.state("loginView",{url:"/login",templateUrl:"views/loginView.html"})}]);
 kennslumat.controller("loginController",["$scope",function(o){o.thing="loginController works"}]);

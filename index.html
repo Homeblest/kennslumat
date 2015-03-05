@@ -4,13 +4,14 @@
 		<link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.min.css">
 	</head>
 	<body>
+		
+		<div class="container" ui-view>
 
-		<div class="container" ng-controller="loginController">
-			Name: <input type="text" ng-model="name" /> {{name}}
 		</div>
 		
 		<script src="bower_components\angular\angular.min.js"></script>
 		<script src="bower_components\angular-bootstrap\ui-bootstrap-tpls.js"></script>
+		<script src="bower_components\angular-ui-router\release\angular-ui-router.min.js"></script>
 		<script src="app\finalConcat.js"></script>
 	</body>
 </html>
