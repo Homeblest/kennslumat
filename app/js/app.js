@@ -1,1 +1,2 @@
-var HR_Eval = angular.module('HR_Eval', ['ui.router', 'luegg.directives', 'ui.bootstrap']);
+var kennslumat = angular.module("kennslumat", ['ui.bootstrap']);
+

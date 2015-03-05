@@ -5,13 +5,9 @@ var gulp = require('gulp'),
     ngAnnotate = require('gulp-ng-annotate'),
     stylish = require('jshint-stylish');
 
-var paths = {
-	scripts: ['app/**/*.js', '!app/kennslumat.min.js']
-};
-
 gulp.task('default', function() {
-	return gulp.src(paths.scripts)
-		.pipe(jshint({
+    return gulp.src(['app/js/*.js', '!app/finalConcat.js'])
+        .pipe(jshint({
             curly: true,
             immed: true,
             newcap: true,
@@ -28,14 +24,13 @@ gulp.task('default', function() {
                 moment: false,
                 console: false,
                 $: false,
-                RuChat: true,
-                io: true
+                kennslumat: true
             }
         }))
         .pipe(jshint.reporter(stylish))
         .pipe(jshint.reporter('fail'))
         .pipe(ngAnnotate())
         .pipe(uglify())
-        .pipe(concat('kennslumat.min.js'))
+        .pipe(concat('finalConcat.js'))
         .pipe(gulp.dest('app'))
 });
