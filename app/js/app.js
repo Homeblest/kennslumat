@@ -1,6 +1,6 @@
-var kennslumat = angular.module("kennslumat", ['ui.bootstrap', 'ui.router']);
+var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router']);
 
-kennslumat.config(function($stateProvider, $urlRouterProvider) {
+evalApp.config(function($stateProvider, $urlRouterProvider) {
 
     // For any unmatched url, redirect to /loginView
     $urlRouterProvider.otherwise("/login");
@@ -9,6 +9,11 @@ kennslumat.config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('loginView', {
             url: "/login",
-            templateUrl: "views/loginView.html"
+            templateUrl: "views/loginView.html",
+            controller: "loginController"
+        })
+        .state('evalOverView', {
+        	url: "/overview",
+        	templateUrl: "views/evalOverView.html"
         });
 });
