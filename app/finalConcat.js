@@ -1,2 +1,3 @@
-var kennslumat=angular.module("kennslumat",["ui.bootstrap","ui.router"]);kennslumat.config(["$stateProvider","$urlRouterProvider",function(e,t){t.otherwise("/login"),e.state("loginView",{url:"/login",templateUrl:"views/loginView.html"})}]);
-kennslumat.controller("loginController",["$scope",function(o){o.thing="loginController works"}]);
+var evalApp=angular.module("evalApp",["ui.bootstrap","ui.router"]);evalApp.config(["$stateProvider","$urlRouterProvider",function(e,l){l.otherwise("/login"),e.state("loginView",{url:"/login",templateUrl:"views/loginView.html",controller:"loginController"}).state("evalOverView",{url:"/overview",templateUrl:"views/evalOverView.html"})}]);
+evalApp.controller("loginController",["$scope","$http","$state","mainFactory",function(e,o,s,r){e.username="",e.password="";var a={user:"",pass:""};e.login=function(){a.user=e.username,a.pass=e.password,r.login(a),s.go("evalOverView")}}]);
+evalApp.factory("mainFactory",["$http",function(o){var n="http://localhost:19358/api/v1/";return{login:function(t){o.post(n+"login",t).success(function(o){console.log(o.Token),console.log(o.User.FullName)})}}}]);

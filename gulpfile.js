@@ -6,7 +6,7 @@ var gulp = require('gulp'),
     stylish = require('jshint-stylish');
 
 gulp.task('default', function() {
-    return gulp.src(['app/js/*.js', '!app/finalConcat.js'])
+    return gulp.src(['app/js/*.js','app/controllers/*.js','app/**/*.js', '!app/finalConcat.js'])
         .pipe(jshint({
             curly: true,
             immed: true,
@@ -24,7 +24,7 @@ gulp.task('default', function() {
                 moment: false,
                 console: false,
                 $: false,
-                kennslumat: true
+                evalApp: true
             }
         }))
         .pipe(jshint.reporter(stylish))
