@@ -5,15 +5,18 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
             // Log the user in, using the loginData object for authorization.
             return $http.post(server + "login", loginData)
                 .success(function(data) {
-
                     // Store the token in the window session
                     $window.sessionStorage.token = data.Token;
-                    // Redirect on success.
-                    $state.go("evalOverView");
+                    if (data.User.Role == "admin") {
+                        // If user is admin, redirect to the admin page.
+                        $state.go("adminDashboard");
+                    } else {
+                        // If normal user, redirect to overview.
+                        $state.go("evalOverView");
+                    }
 
                 })
                 .error(function(data, status, headers, config) {
-
                     // Erase the token inf user fails to log in
                     delete $window.sessionStorage.token;
                     // TODO: Log the errors in a better way

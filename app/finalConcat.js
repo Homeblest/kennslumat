@@ -16,12 +16,20 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             url: "/overview",
             templateUrl: "views/evalOverView.html",
             controller: "evalOverViewController"
+        })
+        .state('adminDashboard', {
+            url: "/adminDashboard",
+            templateUrl: "views/adminDashboard.html",
+            controller: "adminDashboardController"
         });
+}]);
+evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory){
+	console.log("adminDashboardController says hi");
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
 	mainFactory.getCourses();
 }]);
-evalApp.controller('loginController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
+evalApp.controller('loginController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
     $scope.isSuccess = false;
     var loginData = {
         user: "",
@@ -29,11 +37,10 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "$http", "$state"
     };
     /*
         Fills the loginData object with user and pass,
-        then calls the login function in factory with
-        the loginData and redirects to next view.
+        then calls the login function in the factory.
     */
     $scope.login = function() {
-
+        console.log($scope.username + " pushed login");
         loginData.user = $scope.username;
         loginData.pass = $scope.password;
 
@@ -74,15 +81,18 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
             // Log the user in, using the loginData object for authorization.
             return $http.post(server + "login", loginData)
                 .success(function(data) {
-
                     // Store the token in the window session
                     $window.sessionStorage.token = data.Token;
-                    // Redirect on success.
-                    $state.go("evalOverView");
+                    if (data.User.Role == "admin") {
+                        // If user is admin, redirect to the admin page.
+                        $state.go("adminDashboard");
+                    } else {
+                        // If normal user, redirect to overview.
+                        $state.go("evalOverView");
+                    }
 
                 })
                 .error(function(data, status, headers, config) {
-
                     // Erase the token inf user fails to log in
                     delete $window.sessionStorage.token;
                     // TODO: Log the errors in a better way

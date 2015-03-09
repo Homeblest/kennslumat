@@ -16,5 +16,10 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
             url: "/overview",
             templateUrl: "views/evalOverView.html",
             controller: "evalOverViewController"
+        })
+        .state('adminDashboard', {
+            url: "/adminDashboard",
+            templateUrl: "views/adminDashboard.html",
+            controller: "adminDashboardController"
         });
 });

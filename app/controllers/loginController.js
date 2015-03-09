@@ -1,4 +1,4 @@
-evalApp.controller('loginController', function($scope, $rootScope, $http, $state, mainFactory) {
+evalApp.controller('loginController', function($scope, $rootScope, $state, mainFactory) {
     $scope.isSuccess = false;
     var loginData = {
         user: "",
@@ -6,11 +6,10 @@ evalApp.controller('loginController', function($scope, $rootScope, $http, $state
     };
     /*
         Fills the loginData object with user and pass,
-        then calls the login function in factory with
-        the loginData and redirects to next view.
+        then calls the login function in the factory.
     */
     $scope.login = function() {
-
+        
         loginData.user = $scope.username;
         loginData.pass = $scope.password;
 
