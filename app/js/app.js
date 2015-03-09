@@ -13,7 +13,8 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
             controller: "loginController"
         })
         .state('evalOverView', {
-        	url: "/overview",
-        	templateUrl: "views/evalOverView.html"
+            url: "/overview",
+            templateUrl: "views/evalOverView.html",
+            controller: "evalOverViewController"
         });
 });

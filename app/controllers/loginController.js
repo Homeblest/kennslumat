@@ -1,4 +1,4 @@
-evalApp.controller('loginController', function($scope, $http, $state, mainFactory) {
+evalApp.controller('loginController', function($scope, $rootScope, $http, $state, mainFactory) {
 
     $scope.username = '';
     $scope.password = '';
