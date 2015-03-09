@@ -6,7 +6,7 @@ var gulp = require('gulp'),
     stylish = require('jshint-stylish');
 
 gulp.task('default', function() {
-    return gulp.src(['app/js/*.js','app/controllers/*.js','app/**/*.js', '!app/finalConcat.js'])
+    return gulp.src(['app/js/*.js','app/controllers/*.js','app/**/*.js', '!app/finalConcat.js', '!app/tests/*.js'])
         .pipe(jshint({
             curly: true,
             immed: true,
@@ -30,7 +30,7 @@ gulp.task('default', function() {
         .pipe(jshint.reporter(stylish))
         .pipe(jshint.reporter('fail'))
         .pipe(ngAnnotate())
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(concat('finalConcat.js'))
         .pipe(gulp.dest('app'))
 });
