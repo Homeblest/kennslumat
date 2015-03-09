@@ -15,7 +15,5 @@ evalApp.controller('loginController', function($scope, $rootScope, $http, $state
         loginData.pass = $scope.password;
 
         mainFactory.login(loginData);
-
-        $state.go("evalOverView");
     };
 });
