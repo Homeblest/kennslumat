@@ -3,7 +3,7 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
     return {
         login: function(loginData) {
             // Log the user in, using the loginData object for authorization.
-            $http.post(server + "login", loginData)
+            return $http.post(server + "login", loginData)
                 .success(function(data) {
 
                     // Store the token in the window session
@@ -13,6 +13,7 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
 
                 })
                 .error(function(data, status, headers, config) {
+
                     // Erase the token inf user fails to log in
                     delete $window.sessionStorage.token;
                     // TODO: Log the errors in a better way

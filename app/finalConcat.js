@@ -1,4 +1,4 @@
-var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router']);
+var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router', 'loadingButton']);
 
 evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
 
@@ -22,7 +22,7 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 	mainFactory.getCourses();
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
-    
+    $scope.isSuccess = false;
     var loginData = {
         user: "",
         pass: ""
@@ -37,7 +37,13 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "$http", "$state"
         loginData.user = $scope.username;
         loginData.pass = $scope.password;
 
-        mainFactory.login(loginData);
+        mainFactory.login(loginData)
+            .success(function() {
+                $scope.isSuccess = true;
+            })
+            .error(function() {
+                $scope.isSuccess = false;
+            });
     };
 }]);
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
@@ -66,7 +72,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
     return {
         login: function(loginData) {
             // Log the user in, using the loginData object for authorization.
-            $http.post(server + "login", loginData)
+            return $http.post(server + "login", loginData)
                 .success(function(data) {
 
                     // Store the token in the window session
@@ -76,6 +82,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
 
                 })
                 .error(function(data, status, headers, config) {
+
                     // Erase the token inf user fails to log in
                     delete $window.sessionStorage.token;
                     // TODO: Log the errors in a better way

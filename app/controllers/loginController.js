@@ -1,5 +1,5 @@
 evalApp.controller('loginController', function($scope, $rootScope, $http, $state, mainFactory) {
-    
+    $scope.isSuccess = false;
     var loginData = {
         user: "",
         pass: ""
@@ -14,6 +14,12 @@ evalApp.controller('loginController', function($scope, $rootScope, $http, $state
         loginData.user = $scope.username;
         loginData.pass = $scope.password;
 
-        mainFactory.login(loginData);
+        mainFactory.login(loginData)
+            .success(function() {
+                $scope.isSuccess = true;
+            })
+            .error(function() {
+                $scope.isSuccess = false;
+            });
     };
 });

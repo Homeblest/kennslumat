@@ -1,4 +1,4 @@
-var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router']);
+var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router', 'loadingButton']);
 
 evalApp.config(function($stateProvider, $urlRouterProvider) {
 
