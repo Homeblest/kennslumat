@@ -21,7 +21,7 @@ module.exports = function(config) {
             'bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'app/finalConcat.js',
-            'app/tests/*.js'
+            'tests/*.js'
         ],
 
 
@@ -36,7 +36,7 @@ module.exports = function(config) {
         preprocessors: {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
-            'app/finalConcat.js': ['coverage']
+            'app/**/*.js': 'coverage'
         },
 
         // optionally, configure the reporter

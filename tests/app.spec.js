@@ -1,4 +1,3 @@
-
 describe('loginController:', function() {
 
     beforeEach(module('evalApp'));
@@ -20,6 +19,14 @@ describe('loginController:', function() {
                     "one": "three"
                 });
                 return deferred.promise;
+            },
+            getCourses: function() {
+                deferred = q.defer();
+
+                // Place the fake return object here
+                deferred.resolve();
+
+                return deferred.promise;
             }
         };
         spyOn(fakeFactory, 'login').and.callThrough();
@@ -33,7 +40,7 @@ describe('loginController:', function() {
         controller = $controller('loginController', {
             $scope: scope,
             mainFactory: fakeFactory,
-            $rootScope : rootScope
+            $rootScope: rootScope
         });
 
     }));
@@ -61,8 +68,58 @@ describe('loginController:', function() {
 
         // Expect the login function to have called the login service
         expect(fakeFactory.login).toHaveBeenCalled();
-        
+
     });
 
+});
+
+describe('evalOverViewController', function() {
+    beforeEach(module('evalApp'));
+
+    var scope,
+        rootScope,
+        fakeFactory,
+        controller,
+        q,
+        deferred;
+
+    beforeEach(function() {
+        fakeFactory = {
+            login: function(loginData) {
+
+                deferred = q.defer();
+
+                // Place the fake return object here
+                deferred.resolve();
+
+                return deferred.promise;
+            },
+            getCourses: function() {
+                deferred = q.defer();
+
+                // Place the fake return object here
+                deferred.resolve();
+
+                return deferred.promise;
+            }
+        };
+        spyOn(fakeFactory, 'getCourses').and.callThrough();
+    });
+
+    //Inject fake factory into controller
+    beforeEach(inject(function($rootScope, $controller, $q, mainFactory) {
+        rootScope = $rootScope;
+        scope = $rootScope.$new();
+        q = $q;
+        controller = $controller('evalOverViewController', {
+            $scope: scope,
+            mainFactory: fakeFactory,
+            $rootScope: rootScope
+        });
+    }));
+
+    it('getCourses should be called', function() {
+        expect(fakeFactory.getCourses).toHaveBeenCalled();
+    })
 
 });

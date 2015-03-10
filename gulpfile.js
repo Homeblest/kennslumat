@@ -37,7 +37,7 @@ gulp.task('lint', function() {
 gulp.task('wrap', function() {
     return gulp.src(srcFiles)
         .pipe(ngAnnotate())
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(concat('finalConcat.js'))
         .pipe(gulp.dest('app'))
 });
