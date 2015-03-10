@@ -1,24 +1,68 @@
-describe("loginController", function() {
-    var ctrl;
-    var scope;
 
-    var mockResource = {
-        login: function(loginData) {
-
-        }
-    };
+describe('loginController:', function() {
 
     beforeEach(module('evalApp'));
 
-    beforeEach(inject(function($rootScope, $controller) {
+    var scope,
+        rootScope,
+        fakeFactory,
+        controller,
+        q,
+        deferred;
+
+    beforeEach(function() {
+        fakeFactory = {
+            login: function(loginData) {
+
+                deferred = q.defer();
+                // Place the fake return object here
+                deferred.resolve({
+                    "one": "three"
+                });
+                return deferred.promise;
+            }
+        };
+        spyOn(fakeFactory, 'login').and.callThrough();
+    });
+
+    //Inject fake factory into controller
+    beforeEach(inject(function($rootScope, $controller, $q, mainFactory) {
+        rootScope = $rootScope;
         scope = $rootScope.$new();
-        ctrl = $controller('loginController', {
-            $scope: scope
+        q = $q;
+        controller = $controller('loginController', {
+            $scope: scope,
+            mainFactory: fakeFactory,
+            $rootScope : rootScope
         });
+
     }));
 
-    it("should call login function with defined user and pass", function() {
-    	
-        expect(ctrl.loginData).toBeDefined();
+    it('isSuccess should be false', function() {
+        expect(scope.isSuccess).toBe(false);
     });
+
+    it('loginData should be defined', function() {
+        expect(scope.loginData).toBeDefined();
+    });
+
+    it('login function should call service', function() {
+
+        // fill username and pass with static data
+        scope.username = "hjaltil13";
+        scope.password = "12345";
+
+        // Execute the login function
+        scope.login();
+
+        // Expect the controller to have filled in the object.
+        expect(scope.loginData.user).toBeDefined();
+        expect(scope.loginData.pass).toBeDefined();
+
+        // Expect the login function to have called the login service
+        expect(fakeFactory.login).toHaveBeenCalled();
+        
+    });
+
+
 });

@@ -17,6 +17,7 @@ module.exports = function(config) {
         files: [
             'bower_components/angular/angular.js',
             'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+            'bower_components/angular-loading-button/angular-loading-button.min.js',
             'bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'app/finalConcat.js',
@@ -38,9 +39,16 @@ module.exports = function(config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
+        reporters: ['progress'/*, 'html'*/],
+/*
+        htmlReporter: {
+            outputFile: 'app/test/units.html'
+        },
 
-
+        plugins: [
+            'karma-htmlfile-reporter'
+        ],
+*/
         // web server port
         port: 9876,
 

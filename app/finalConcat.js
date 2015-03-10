@@ -29,29 +29,23 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
 	mainFactory.getCourses();
 }]);
-evalApp.controller('loginController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
+
     $scope.isSuccess = false;
-    var loginData = {
-        user: "",
-        pass: ""
-    };
+    $scope.loginData = {};
+
     /*
         Fills the loginData object with user and pass,
         then calls the login function in the factory.
     */
     $scope.login = function() {
-        console.log($scope.username + " pushed login");
-        loginData.user = $scope.username;
-        loginData.pass = $scope.password;
 
-        mainFactory.login(loginData)
-            .success(function() {
-                $scope.isSuccess = true;
-            })
-            .error(function() {
-                $scope.isSuccess = false;
-            });
+        $scope.loginData.user = $scope.username;
+        $scope.loginData.pass = $scope.password;
+
+        mainFactory.login($scope.loginData);
     };
+
 }]);
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
@@ -79,10 +73,11 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
     return {
         login: function(loginData) {
             // Log the user in, using the loginData object for authorization.
-            return $http.post(server + "login", loginData)
+            $http.post(server + "login", loginData)
                 .success(function(data) {
                     // Store the token in the window session
                     $window.sessionStorage.token = data.Token;
+
                     if (data.User.Role == "admin") {
                         // If user is admin, redirect to the admin page.
                         $state.go("adminDashboard");
@@ -90,10 +85,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
                         // If normal user, redirect to overview.
                         $state.go("evalOverView");
                     }
-
                 })
                 .error(function(data, status, headers, config) {
-                    // Erase the token inf user fails to log in
+                    // Erase the token if user fails to log in
                     delete $window.sessionStorage.token;
                     // TODO: Log the errors in a better way
                     console.log('Error: ' + status);
