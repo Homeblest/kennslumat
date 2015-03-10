@@ -7,7 +7,8 @@ describe('loginController:', function() {
         fakeFactory,
         controller,
         q,
-        deferred;
+        deferred,
+        httpBackend;
 
     beforeEach(function() {
         fakeFactory = {
@@ -33,7 +34,8 @@ describe('loginController:', function() {
     });
 
     //Inject fake factory into controller
-    beforeEach(inject(function($rootScope, $controller, $q, mainFactory) {
+    beforeEach(inject(function($rootScope, $controller, $q, mainFactory, $httpBackend) {
+        httpBackend = $httpBackend;
         rootScope = $rootScope;
         scope = $rootScope.$new();
         q = $q;
@@ -62,6 +64,8 @@ describe('loginController:', function() {
         // Execute the login function
         scope.login();
 
+        httpBackend.expectPOST('http://localhost:19358/api/v1/login', scope.loginData);
+
         // Expect the controller to have filled in the object.
         expect(scope.loginData.user).toBeDefined();
         expect(scope.loginData.pass).toBeDefined();
@@ -70,6 +74,12 @@ describe('loginController:', function() {
         expect(fakeFactory.login).toHaveBeenCalled();
 
     });
+/*
+    it('should send an HTTP POST request', function() {
+        httpBackend.verifyNoOutstandingExpectation();
+        httpBackend.verifyNoOutstandingRequest();
+    });
+*/
 
 });
 
@@ -81,7 +91,8 @@ describe('evalOverViewController', function() {
         fakeFactory,
         controller,
         q,
-        deferred;
+        deferred,
+        httpBackend;
 
     beforeEach(function() {
         fakeFactory = {
@@ -114,7 +125,8 @@ describe('evalOverViewController', function() {
         controller = $controller('evalOverViewController', {
             $scope: scope,
             mainFactory: fakeFactory,
-            $rootScope: rootScope
+            $rootScope: rootScope,
+            $httpBackend: httpBackend
         });
     }));
 
