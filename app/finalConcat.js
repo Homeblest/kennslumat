@@ -21,9 +21,79 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             url: "/adminDashboard",
             templateUrl: "views/adminDashboard.html",
             controller: "adminDashboardController"
+        })
+        .state('createTemplateView', {
+            url: "/createTemplate",
+            templateUrl: "views/createTemplateView.html",
+            controller: "adminDashboardController"
+        })
+        .state('evaluationResultsView', {
+            url: "/evaluationResults",
+            templateUrl: "views/evaluationResultsView.html",
+            controller: "adminDashboardController"
+        })
+        .state('createEvalutationView', {
+            url: "/createEvalutation",
+            templateUrl: "views/createEvalutationView.html",
+            controller: "adminDashboardController"
         });
 }]);
-evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory){
+evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+
+    $scope.goToCreateTemplateView = function() {
+        $state.go('createTemplateView');
+    };
+
+    $scope.goToEvaluationResults = function() {
+        $state.go('evaluationResultsView');
+    };
+
+    $scope.goToCreateEvalutationView = function() {
+        $state.go('createEvalutationView');
+    };
+
+
+    // createTemplateViewController
+
+    $scope.courseQuestions = [];
+
+    $scope.courseQuestions.push({
+        ID: 0,
+        Text: "",
+        TextEN: "",
+        ImageURL: "",
+        Type: ""
+    });
+
+    $scope.addCourseQuestion = function() {
+        $scope.courseQuestions.push({
+            ID: 0,
+            Text: "",
+            TextEN: "",
+            ImageURL: "",
+            Type: ""
+        });
+    };
+
+    $scope.teacherQuestions = [];
+
+    $scope.teacherQuestions.push({
+        ID: 0,
+        Text: "",
+        TextEN: "",
+        ImageURL: "",
+        Type: ""
+    });
+
+    $scope.addTeacherQuestion = function() {
+        $scope.teacherQuestions.push({
+            ID: 0,
+            Text: "",
+            TextEN: "",
+            ImageURL: "",
+            Type: ""
+        });
+    };
 
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {

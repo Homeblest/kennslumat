@@ -21,5 +21,20 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
             url: "/adminDashboard",
             templateUrl: "views/adminDashboard.html",
             controller: "adminDashboardController"
+        })
+        .state('createTemplateView', {
+            url: "/createTemplate",
+            templateUrl: "views/createTemplateView.html",
+            controller: "adminDashboardController"
+        })
+        .state('evaluationResultsView', {
+            url: "/evaluationResults",
+            templateUrl: "views/evaluationResultsView.html",
+            controller: "adminDashboardController"
+        })
+        .state('createEvalutationView', {
+            url: "/createEvalutation",
+            templateUrl: "views/createEvalutationView.html",
+            controller: "adminDashboardController"
         });
 });
