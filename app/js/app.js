@@ -25,16 +25,16 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
         .state('createTemplateView', {
             url: "/createTemplate",
             templateUrl: "views/createTemplateView.html",
-            controller: "adminDashboardController"
+            controller: "createTemplateController"
         })
         .state('evaluationResultsView', {
             url: "/evaluationResults",
             templateUrl: "views/evaluationResultsView.html",
             controller: "adminDashboardController"
         })
-        .state('createEvalutationView', {
-            url: "/createEvalutation",
-            templateUrl: "views/createEvalutationView.html",
-            controller: "adminDashboardController"
+        .state('templateOverview', {
+            url: "/templateOverview",
+            templateUrl: "views/templateOverview.html",
+            controller: "templateOverviewController"
         });
 });

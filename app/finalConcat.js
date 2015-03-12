@@ -25,17 +25,17 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
         .state('createTemplateView', {
             url: "/createTemplate",
             templateUrl: "views/createTemplateView.html",
-            controller: "adminDashboardController"
+            controller: "createTemplateController"
         })
         .state('evaluationResultsView', {
             url: "/evaluationResults",
             templateUrl: "views/evaluationResultsView.html",
             controller: "adminDashboardController"
         })
-        .state('createEvalutationView', {
-            url: "/createEvalutation",
-            templateUrl: "views/createEvalutationView.html",
-            controller: "adminDashboardController"
+        .state('templateOverview', {
+            url: "/templateOverview",
+            templateUrl: "views/templateOverview.html",
+            controller: "templateOverviewController"
         });
 }]);
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
@@ -52,7 +52,8 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
         $state.go('createEvalutationView');
     };
 
-    // createTemplateViewController
+}]);
+evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
 
     $scope.template = {
         ID: null,
@@ -109,7 +110,7 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
             ImageURL: "",
             Weight: 0
         });
-        console.log($scope.template);
+        //console.log($scope.template);
     };
 
     $scope.sendTemplate = function() {
@@ -121,8 +122,7 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
             .error(function(data, status, headers, config) {
                 console.log("ERROR: evaluationtemplate errored with status " + status);
             });
-    }
-
+    };
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
 	mainFactory.getCourses();
@@ -144,6 +144,9 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", fu
         mainFactory.login($scope.loginData);
     };
 
+}]);
+evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+	console.log("oveorieoigrhoi");
 }]);
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
@@ -192,7 +195,6 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
                 });
         },
         getCourses: function() {
-
             $http.get(server + 'my/courses')
                 .success(function(data) {
                     console.log(data);
@@ -200,6 +202,15 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
         },
         sendTemplate: function(template) {
             return $http.post(server + "evaluationtemplates", template);
+        },
+        getAllTemplates: function() {
+            $http.get(server + "evaluationtemplates")
+                .success(function(data) {
+                    console.log(data);
+                });
+        },
+        getTemplateById: function(id) {
+            return $http.get(server + 'evaluationtemplates/' + id);
         }
     };
 }]);
