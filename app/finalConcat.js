@@ -54,41 +54,53 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
 
     // createTemplateViewController
 
+    $scope.questionTypes = ["text", "single", "multiple"];
+
     $scope.courseQuestions = [];
     $scope.courseQuestionsID = 0;
 
-    $scope.addCourseQuestion = function() {
+    $scope.addCourseQuestion = function(_type) {
         $scope.courseQuestions.push({
             ID: $scope.courseQuestionsID,
             Text: "",
             TextEN: "",
             ImageURL: "",
-            Type: ""
+            Type: _type,
+            Answers: []
         });
-        console.log("Added course question number: " + $scope.courseQuestionsID);
+        //console.log("Added course question number: " + $scope.courseQuestionsID + " and it is of type: " + $scope.courseQuestions[$scope.courseQuestionsID].Type);
         $scope.courseQuestionsID += 1;
     };
-
-    // Make sure there is at least one question form available.
-    $scope.addCourseQuestion();
 
     $scope.teacherQuestions = [];
     $scope.teacherQuestionsID = 0;
 
-    $scope.addTeacherQuestion = function() {
+    $scope.addTeacherQuestion = function(_type) {
         $scope.teacherQuestions.push({
             ID: $scope.teacherQuestionsID,
             Text: "",
             TextEN: "",
             ImageURL: "",
-            Type: ""
+            Type: _type,
+            Answers: []
         });
-        console.log("Added teacher question number: " + $scope.teacherQuestionsID);
+        //console.log("Added teacher question number: " + $scope.teacherQuestionsID + " and it is of type: " + $scope.teacherQuestions[$scope.teacherQuestionsID].Type);
         $scope.teacherQuestionsID += 1;
     };
 
     // Make sure there is at least one question form available.
-    $scope.addTeacherQuestion();
+    $scope.addTeacherQuestion($scope.questionTypes[0]);
+
+    $scope.addAnswer = function(question) {
+        question.Answers.push({
+            ID: question.Answers.length,
+            Text: "",
+            TextEN: "",
+            ImageURL: "",
+            Weight: 0
+        });
+        console.log($scope.courseQuestions);
+    };
 
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
