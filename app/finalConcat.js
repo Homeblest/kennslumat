@@ -54,13 +54,22 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
 
     // createTemplateViewController
 
+    $scope.template = {
+        ID: null,
+        Title: "",
+        TitleEN: "",
+        IntroText: "",
+        IntroTextEN: "",
+        CourseQuestions: [],
+        TeacherQuestions: []
+    };
+
     $scope.questionTypes = ["text", "single", "multiple"];
 
-    $scope.courseQuestions = [];
     $scope.courseQuestionsID = 0;
 
     $scope.addCourseQuestion = function(_type) {
-        $scope.courseQuestions.push({
+        $scope.template.CourseQuestions.push({
             ID: $scope.courseQuestionsID,
             Text: "",
             TextEN: "",
@@ -72,11 +81,10 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
         $scope.courseQuestionsID += 1;
     };
 
-    $scope.teacherQuestions = [];
     $scope.teacherQuestionsID = 0;
 
     $scope.addTeacherQuestion = function(_type) {
-        $scope.teacherQuestions.push({
+        $scope.template.TeacherQuestions.push({
             ID: $scope.teacherQuestionsID,
             Text: "",
             TextEN: "",
@@ -99,8 +107,12 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
             ImageURL: "",
             Weight: 0
         });
-        console.log($scope.courseQuestions);
+        console.log($scope.template);
     };
+
+    $scope.sendTemplate = function() {
+    	mainFactory.sendTemplate($scope.template);
+    }
 
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
@@ -175,6 +187,15 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
             $http.get(server + 'my/courses')
                 .success(function(data) {
                     console.log(data);
+                });
+        },
+        sendTemplate: function(template) {
+            $http.post(server + "evaluationtemplates", template)
+                .success(function(data, status, headers, config) {
+                    console.log("SUCCESS: evaluationtemplate sent with status " + status);
+                })
+                .error(function(data, status, headers, config) {
+                    console.log("ERROR: evaluationtemplate errored with status " + status);
                 });
         }
     };

@@ -14,13 +14,22 @@ evalApp.controller('adminDashboardController', function($scope, $rootScope, $sta
 
     // createTemplateViewController
 
+    $scope.template = {
+        ID: null,
+        Title: "",
+        TitleEN: "",
+        IntroText: "",
+        IntroTextEN: "",
+        CourseQuestions: [],
+        TeacherQuestions: []
+    };
+
     $scope.questionTypes = ["text", "single", "multiple"];
 
-    $scope.courseQuestions = [];
     $scope.courseQuestionsID = 0;
 
     $scope.addCourseQuestion = function(_type) {
-        $scope.courseQuestions.push({
+        $scope.template.CourseQuestions.push({
             ID: $scope.courseQuestionsID,
             Text: "",
             TextEN: "",
@@ -32,11 +41,10 @@ evalApp.controller('adminDashboardController', function($scope, $rootScope, $sta
         $scope.courseQuestionsID += 1;
     };
 
-    $scope.teacherQuestions = [];
     $scope.teacherQuestionsID = 0;
 
     $scope.addTeacherQuestion = function(_type) {
-        $scope.teacherQuestions.push({
+        $scope.template.TeacherQuestions.push({
             ID: $scope.teacherQuestionsID,
             Text: "",
             TextEN: "",
@@ -59,7 +67,11 @@ evalApp.controller('adminDashboardController', function($scope, $rootScope, $sta
             ImageURL: "",
             Weight: 0
         });
-        console.log($scope.courseQuestions);
+        console.log($scope.template);
     };
+
+    $scope.sendTemplate = function() {
+    	mainFactory.sendTemplate($scope.template);
+    }
 
 });

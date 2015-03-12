@@ -29,6 +29,15 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
                 .success(function(data) {
                     console.log(data);
                 });
+        },
+        sendTemplate: function(template) {
+            $http.post(server + "evaluationtemplates", template)
+                .success(function(data, status, headers, config) {
+                    console.log("SUCCESS: evaluationtemplate sent with status " + status);
+                })
+                .error(function(data, status, headers, config) {
+                    console.log("ERROR: evaluationtemplate errored with status " + status);
+                });
         }
     };
 });

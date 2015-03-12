@@ -7,34 +7,34 @@
 <div class="well well-lg">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2 templateForm">
-			<form>
+			<form ng-submit="sendTemplate()">
 				<div class="form-group">
 					<label for="inputTemplateTitle">Title:</label>
-					<input required type="text" class="form-control" id="inputTemplateTitle" placeholder="Enter template title">
+					<input required ng-model="template.Title" type="text" class="form-control" id="inputTemplateTitle" placeholder="Enter template title">
 				</div>
 				
 				<div class="form-group">
 					<label for="englishInputTemplateTitle">Title (english):</label>
-					<input type="text" class="form-control" id="englishInputTemplateTitle" placeholder="Enter template title in english">
+					<input ng-model="template.TitleEN" type="text" class="form-control" id="englishInputTemplateTitle" placeholder="Enter template title in english">
 				</div>
 				
 				<div class="form-group">
 					<label for="evalIntroText">Intro Text:</label>
-					<textarea required rows="5"cols="10" class="form-control" id="evalIntroText" placeholder="Enter the intro text"></textarea>
+					<textarea required ng-model="template.IntroText" rows="5"cols="10" class="form-control" id="evalIntroText" placeholder="Enter the intro text"></textarea>
 				</div>
 				
 				<div class="form-group">
 					<label for="englishEvalIntroText"> Intro Text (english): </label>
-					<textarea rows="5"cols="10" class="form-control" id="englishEvalIntroText" placeholder="Enter the intro text in english"></textarea>
+					<textarea ng-model="template.IntroTextEN" rows="5"cols="10" class="form-control" id="englishEvalIntroText" placeholder="Enter the intro text in english"></textarea>
 				</div>
 				
 				<div class="form-group">
 					<label>Course Questions: </label>
 				</div>
 				
-				<div class="well" ng-if="courseQuestions.length === 0">There are no course questions!</div>
+				<div class="well" ng-if="template.CourseQuestions.length === 0">There are no course questions!</div>
 				
-				<div class="form-group" ng-repeat="question in courseQuestions">
+				<div class="form-group" ng-repeat="question in template.CourseQuestions">
 
 					<h4>Question {{question.ID + 1}}, {{question.Type}}:</h4>
 
@@ -93,7 +93,7 @@
 					<label for="evalIntroText">Teacher Questions: </label>
 				</div>
 				
-				<div class="form-group" ng-repeat="question in teacherQuestions">
+				<div class="form-group" ng-repeat="question in template.TeacherQuestions">
 
 					<h4>{{question.ID + 1}}, {{question.Type}}:</h4>
 
