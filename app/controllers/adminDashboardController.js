@@ -12,47 +12,39 @@ evalApp.controller('adminDashboardController', function($scope, $rootScope, $sta
         $state.go('createEvalutationView');
     };
 
-
     // createTemplateViewController
 
     $scope.courseQuestions = [];
-
-    $scope.courseQuestions.push({
-        ID: 0,
-        Text: "",
-        TextEN: "",
-        ImageURL: "",
-        Type: ""
-    });
+    $scope.courseQuestionsID = 0;
 
     $scope.addCourseQuestion = function() {
         $scope.courseQuestions.push({
-            ID: 0,
+            ID: $scope.courseQuestionsID,
             Text: "",
             TextEN: "",
             ImageURL: "",
             Type: ""
         });
+        console.log("Added course question number: " + $scope.courseQuestionsID);
+        $scope.courseQuestionsID += 1;
     };
 
     $scope.teacherQuestions = [];
-
-    $scope.teacherQuestions.push({
-        ID: 0,
-        Text: "",
-        TextEN: "",
-        ImageURL: "",
-        Type: ""
-    });
+    $scope.teacherQuestionsID = 0;
 
     $scope.addTeacherQuestion = function() {
         $scope.teacherQuestions.push({
-            ID: 0,
+            ID: $scope.teacherQuestionsID,
             Text: "",
             TextEN: "",
             ImageURL: "",
             Type: ""
         });
+        console.log("Added teacher question number: " + $scope.teacherQuestionsID);
+        $scope.teacherQuestionsID += 1;
     };
+
+    // Make sure there is at least one question form available.
+    $scope.addTeacherQuestion();
 
 });

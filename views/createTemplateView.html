@@ -10,49 +10,71 @@
 			<form>
 				<div class="form-group">
 					<label for="inputTemplateTitle">Title:</label>
-					<input type="text" class="form-control" id="inputTemplateTitle" placeholder="Enter template title">
+					<input required type="text" class="form-control" id="inputTemplateTitle" placeholder="Enter template title">
 				</div>
-
+				
 				<div class="form-group">
 					<label for="englishInputTemplateTitle">Title (english):</label>
 					<input type="text" class="form-control" id="englishInputTemplateTitle" placeholder="Enter template title in english">
 				</div>
-
+				
 				<div class="form-group">
 					<label for="evalIntroText">Intro Text:</label>
-					<textarea rows="5"cols="10" class="form-control" id="evalIntroText" placeholder="Enter the intro text"></textarea>
+					<textarea required rows="5"cols="10" class="form-control" id="evalIntroText" placeholder="Enter the intro text"></textarea>
 				</div>
-
+				
 				<div class="form-group">
 					<label for="englishEvalIntroText"> Intro Text (english): </label>
 					<textarea rows="5"cols="10" class="form-control" id="englishEvalIntroText" placeholder="Enter the intro text in english"></textarea>
 				</div>
-
+				
 				<div class="form-group">
 					<label for="evalIntroText">Course Questions: </label>
 				</div>
-
+				
 				<div class="form-group" ng-repeat="question in courseQuestions">
 					<input type="text" class="form-control" placeholder="Type question here">
 				</div>
-
+				
 				<div class="form-group">
-					<button type="button" class="btn btn-default glyphicon glyphicon-plus" ng-click="addCourseQuestion()"> New Course Question</button>
+					<div class="btn-group" dropdown>
+						<button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+						Add Question <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="" ng-click="addCourseQuestion()">Text</a></li>
+							<li class="divider"></li>
+							<li><a href="" ng-click="addCourseQuestion()">Single</a></li>
+							<li class="divider"></li>
+							<li><a href="" ng-click="addCourseQuestion()">Multiple</a></li>
+						</ul>
+					</div>
 				</div>
-
+				
 				<div class="form-group">
 					<label for="evalIntroText">Teacher Questions: </label>
 				</div>
-
+				
 				<div class="form-group" ng-repeat="question in teacherQuestions">
 					<input type="text" class="form-control" placeholder="Type question here">
 				</div>
-
+				
 				<div class="form-group">
-					<button type="button" class="btn btn-default glyphicon glyphicon-plus" ng-click="addTeacherQuestion()"> New Teacher Question</button>
+					<div class="btn-group" dropdown>
+						<button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+						Add Question <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="" ng-click="addTeacherQuestion()">Text</a></li>
+							<li class="divider"></li>
+							<li><a href="" ng-click="addTeacherQuestion()">Single</a></li>
+							<li class="divider"></li>
+							<li><a href="" ng-click="addTeacherQuestion()">Multiple</a></li>
+						</ul>
+					</div>
 				</div>
-
-
+				
+				
 				<button type="submit" class="btn btn-primary">Create</button>
 			</form>
 		</div>
