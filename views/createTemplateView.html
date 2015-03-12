@@ -95,19 +95,41 @@
 				
 				<div class="form-group" ng-repeat="question in teacherQuestions">
 
-					<h5>{{question.ID + 1}}, {{question.Type}}:</h5>
+					<h4>{{question.ID + 1}}, {{question.Type}}:</h4>
 
 					<!-- IF QUESTION IS OF TYPE TEXT -->
-					<input type="text" class="form-control" placeholder="Type question here">
-
-					<!-- IF QUESTION IS OF TYPE SINGLE OR MULTIPLE -->
-					<div ng-if="question.Type !== 'text'">
-						<div ng-repeat="answer in question.Answers">
-							<input type="text" class="form-control" placeholder="Type answer here">
-						</div>
-						<button type="button" class="btn btn-info" ng-click="addAnswer(question)">Add Answer</button>
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Type question here">
 					</div>
 
+					<!-- IF QUESTION IS OF TYPE SINGLE OR MULTIPLE -->
+					<div ng-if="question.Type !== 'text'" class="col-md-offset-1">
+						<div class="form-group">
+							<div class="well well-sm" ng-if="question.Answers.length === 0">
+								Press the plus sign to add an answer!
+							</div>
+							<div class="well" ng-repeat="answer in question.Answers">
+								<h5>Answer {{answer.ID + 1}}:</h5>
+								<div class="form-group">
+									<label>Text:</label>
+									<input ng-model="answer.Text" type="text" class="form-control" placeholder="Type answer {{answer.ID + 1}} to question {{question.ID + 1}} here">
+								</div>
+								<div class="form-group">
+									<label>Text (english):</label>
+									<input ng-model="answer.TextEN" type="text" class="form-control" placeholder="Again in english">
+								</div>
+								<div class="form-group">
+									<label>Image URL:</label>
+									<input ng-model="answer.ImageURL" type="text" class="form-control" placeholder="Enter the image URL">
+								</div>
+								<div class="form-group">
+									<label>Weight:</label>
+									<rating ng-model="answer.Weight" max="5" state-on="'glyphicon glyphicon-asterisk'" state-off="'glyphicon glyphicon-minus'"></rating>
+								</div>
+							</div>
+						</div>
+						<button type="button" class="glyphicon glyphicon-plus btn-primary" ng-click="addAnswer(question)"></button>
+					</div>
 				</div>
 				
 				<div class="form-group">
