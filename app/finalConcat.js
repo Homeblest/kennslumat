@@ -64,6 +64,8 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
         TeacherQuestions: []
     };
 
+    $scope.showForm = true;
+
     $scope.questionTypes = ["text", "single", "multiple"];
 
     $scope.courseQuestionsID = 0;
@@ -111,7 +113,14 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
     };
 
     $scope.sendTemplate = function() {
-    	mainFactory.sendTemplate($scope.template);
+        mainFactory.sendTemplate($scope.template)
+            .success(function(data, status, headers, config) {
+                console.log("SUCCESS: evaluationtemplate sent with status " + status);
+                $scope.showForm = false;
+            })
+            .error(function(data, status, headers, config) {
+                console.log("ERROR: evaluationtemplate errored with status " + status);
+            });
     }
 
 }]);
@@ -190,13 +199,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
                 });
         },
         sendTemplate: function(template) {
-            $http.post(server + "evaluationtemplates", template)
-                .success(function(data, status, headers, config) {
-                    console.log("SUCCESS: evaluationtemplate sent with status " + status);
-                })
-                .error(function(data, status, headers, config) {
-                    console.log("ERROR: evaluationtemplate errored with status " + status);
-                });
+            return $http.post(server + "evaluationtemplates", template);
         }
     };
 }]);

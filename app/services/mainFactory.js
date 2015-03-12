@@ -31,13 +31,7 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
                 });
         },
         sendTemplate: function(template) {
-            $http.post(server + "evaluationtemplates", template)
-                .success(function(data, status, headers, config) {
-                    console.log("SUCCESS: evaluationtemplate sent with status " + status);
-                })
-                .error(function(data, status, headers, config) {
-                    console.log("ERROR: evaluationtemplate errored with status " + status);
-                });
+            return $http.post(server + "evaluationtemplates", template);
         }
     };
 });

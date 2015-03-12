@@ -24,6 +24,8 @@ evalApp.controller('adminDashboardController', function($scope, $rootScope, $sta
         TeacherQuestions: []
     };
 
+    $scope.showForm = true;
+
     $scope.questionTypes = ["text", "single", "multiple"];
 
     $scope.courseQuestionsID = 0;
@@ -67,11 +69,18 @@ evalApp.controller('adminDashboardController', function($scope, $rootScope, $sta
             ImageURL: "",
             Weight: 0
         });
-        console.log($scope.template);
+        //console.log($scope.template);
     };
 
     $scope.sendTemplate = function() {
-    	mainFactory.sendTemplate($scope.template);
+        mainFactory.sendTemplate($scope.template)
+            .success(function(data, status, headers, config) {
+                console.log("SUCCESS: evaluationtemplate sent with status " + status);
+                $scope.showForm = false;
+            })
+            .error(function(data, status, headers, config) {
+                console.log("ERROR: evaluationtemplate errored with status " + status);
+            });
     }
 
 });

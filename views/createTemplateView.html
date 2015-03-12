@@ -1,10 +1,16 @@
-<div class="row">
+<div class="row" ng-show="showForm">
 	<div class="col-md-12">
 		<h1> Create a template </h1>
 	</div>
 </div>
 
-<div class="well well-lg">
+<div class="jumbotron" ng-hide="showForm">
+	<h1> Congratulations! </h1>
+	<p> You created a template! </p>
+	<a ui-sref="adminDashboard" class="btn btn-primary">Go back!</a>
+</div>
+
+<div class="well well-lg" ng-show="showForm">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2 templateForm">
 			<form ng-submit="sendTemplate()">
