@@ -1,4 +1,4 @@
-<div class="row" ng-show="showList">
+<div class="row">
 	<div class="col-md-1">
 		<a ui-sref="adminDashboard" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
 	</div>
@@ -7,7 +7,7 @@
 	</div>
 </div>
 
-<div class="row well" ng-show="showList">
+<div class="row well">
 	<div class="col-md-3" ng-repeat="template in templates">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
@@ -20,11 +20,5 @@
 				<button ng-click="viewTemplate(template.ID)" class="btn btn-primary">View Template</button>
 			</div>
 		</div>
-	</div>
-</div>
-
-<div class="row well" ng-hide="showList">
-	<div class="col-md-12">
-		{{template.Title}}
 	</div>
 </div>

@@ -148,7 +148,6 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", fu
 evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
     $scope.templates = [];
     $scope.template = {};
-    $scope.showList = true;
 
     mainFactory.getAllTemplates()
         .success(function(data) {
@@ -162,7 +161,6 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
     	mainFactory.getTemplateById(ID)
     		.success(function(data){
     			$scope.template = data;
-    			$scope.showList = false;
     		});
     };
 }]);

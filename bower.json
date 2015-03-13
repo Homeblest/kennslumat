@@ -11,7 +11,8 @@
     "angular-bootstrap": "~0.12.1",
     "angular-ui-router": "~0.2.13",
     "bootswatch-dist": "readable",
-    "angular-loading-button": "~0.1.1"
+    "angular-loading-button": "~0.1.1",
+    "angular-mocks": "~1.3.14"
   },
   "resolutions": {
     "angular": "1.3.14"
