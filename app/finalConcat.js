@@ -27,15 +27,15 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             templateUrl: "views/createTemplateView.html",
             controller: "createTemplateController"
         })
-        .state('evaluationResultsView', {
-            url: "/evaluationResults",
-            templateUrl: "views/evaluationResultsView.html",
-            controller: "adminDashboardController"
-        })
         .state('templateOverview', {
             url: "/templateOverview",
             templateUrl: "views/templateOverview.html",
             controller: "templateOverviewController"
+        })
+        .state('viewTemplate', {
+            url: '/viewTemplate/:templateID',
+            templateUrl: "views/viewTemplate.html",
+            controller: 'viewTemplateController'
         });
 }]);
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
@@ -145,9 +145,9 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", fu
     };
 
 }]);
-evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
+
     $scope.templates = [];
-    $scope.template = {};
 
     mainFactory.getAllTemplates()
         .success(function(data) {
@@ -158,11 +158,25 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
         });
 
     $scope.viewTemplate = function(ID) {
-    	mainFactory.getTemplateById(ID)
-    		.success(function(data){
-    			$scope.template = data;
-    		});
+    	$state.go('viewTemplate', {"templateID": ID});
     };
+    
+}]);
+evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
+    // The template ID should now be in state params
+    $scope.templateID = $stateParams.templateID;
+
+    $scope.template = {};
+    // Fetch the template object from the server
+    mainFactory.getTemplateById($scope.templateID)
+        .success(function(template) {
+            $scope.template = template;
+        })
+        .error(function(status) {
+            console.log("ERROR: could not fetch template " + $scope.templateID + " with status " + status);
+        });
+
+    
 }]);
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
@@ -211,10 +225,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
                 });
         },
         getCourses: function() {
-            $http.get(server + 'my/courses')
-                .success(function(data) {
-                    console.log(data);
-                });
+            $http.get(server + 'my/courses');
         },
         sendTemplate: function(template) {
             return $http.post(server + "evaluationtemplates", template);

@@ -1,6 +1,6 @@
-evalApp.controller('templateOverviewController', function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('templateOverviewController', function($scope, $rootScope, $state, mainFactory, $stateParams) {
+
     $scope.templates = [];
-    $scope.template = {};
 
     mainFactory.getAllTemplates()
         .success(function(data) {
@@ -11,9 +11,7 @@ evalApp.controller('templateOverviewController', function($scope, $rootScope, $s
         });
 
     $scope.viewTemplate = function(ID) {
-    	mainFactory.getTemplateById(ID)
-    		.success(function(data){
-    			$scope.template = data;
-    		});
+    	$state.go('viewTemplate', {"templateID": ID});
     };
+    
 });

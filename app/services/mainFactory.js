@@ -24,10 +24,7 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
                 });
         },
         getCourses: function() {
-            $http.get(server + 'my/courses')
-                .success(function(data) {
-                    console.log(data);
-                });
+            $http.get(server + 'my/courses');
         },
         sendTemplate: function(template) {
             return $http.post(server + "evaluationtemplates", template);

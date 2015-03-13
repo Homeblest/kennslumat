@@ -27,14 +27,14 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: "views/createTemplateView.html",
             controller: "createTemplateController"
         })
-        .state('evaluationResultsView', {
-            url: "/evaluationResults",
-            templateUrl: "views/evaluationResultsView.html",
-            controller: "adminDashboardController"
-        })
         .state('templateOverview', {
             url: "/templateOverview",
             templateUrl: "views/templateOverview.html",
             controller: "templateOverviewController"
+        })
+        .state('viewTemplate', {
+            url: '/viewTemplate/:templateID',
+            templateUrl: "views/viewTemplate.html",
+            controller: 'viewTemplateController'
         });
 });
