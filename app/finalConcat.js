@@ -146,7 +146,25 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", fu
 
 }]);
 evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
-	console.log("oveorieoigrhoi");
+    $scope.templates = [];
+    $scope.template = {};
+    $scope.showList = true;
+
+    mainFactory.getAllTemplates()
+        .success(function(data) {
+            $scope.templates = data;
+        })
+        .error(function() {
+            console.log("some error occurred");
+        });
+
+    $scope.viewTemplate = function(ID) {
+    	mainFactory.getTemplateById(ID)
+    		.success(function(data){
+    			$scope.template = data;
+    			$scope.showList = false;
+    		});
+    };
 }]);
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
@@ -204,10 +222,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
             return $http.post(server + "evaluationtemplates", template);
         },
         getAllTemplates: function() {
-            $http.get(server + "evaluationtemplates")
-                .success(function(data) {
-                    console.log(data);
-                });
+            return $http.get(server + "evaluationtemplates");
         },
         getTemplateById: function(id) {
             return $http.get(server + 'evaluationtemplates/' + id);

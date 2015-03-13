@@ -33,10 +33,7 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
             return $http.post(server + "evaluationtemplates", template);
         },
         getAllTemplates: function() {
-            $http.get(server + "evaluationtemplates")
-                .success(function(data) {
-                    console.log(data);
-                });
+            return $http.get(server + "evaluationtemplates");
         },
         getTemplateById: function(id) {
             return $http.get(server + 'evaluationtemplates/' + id);
