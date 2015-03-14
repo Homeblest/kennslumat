@@ -34,6 +34,9 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
         },
         getTemplateById: function(id) {
             return $http.get(server + 'evaluationtemplates/' + id);
+        },
+        createEvaluation: function(NewEvaluationDTO) {
+            return $http.post(server + 'evaluations', NewEvaluationDTO);
         }
     };
 });
