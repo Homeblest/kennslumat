@@ -22,6 +22,7 @@ evalApp.controller('viewTemplateController', function($scope, $rootScope, $state
 
     $scope.today = function() {
         $scope.startDate = new Date();
+        $scope.endDate = new Date();
     };
     $scope.today();
 
@@ -38,6 +39,15 @@ evalApp.controller('viewTemplateController', function($scope, $rootScope, $state
 
         $scope.endOpened = true;
     };
+
+    $scope.dateOptions = {
+        formatYear: 'yyyy',
+        startingDay: 0
+    };
+
+
+    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
 
 
 });
