@@ -7,6 +7,32 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-md-12">
+		<a ng-click="createEvaluation = true" ng-hide="createEvaluation" class="btn btn-success btn-lg btn-block">Create Evaluation From This Template</a>
+		<a ng-click="createEvaluation = false" ng-show="createEvaluation"class="btn btn-danger btn-lg btn-block">Cancel Evaluation Creation</a>
+	</div>
+</div>
+<hr/>
+<div class="row" ng-show="createEvaluation">
+	<div class="col-md-4 col-md-offset-4 well well-lg">
+		<label>Start Date:</label>
+		<p class="input-group">
+			<input type="text" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate" is-open="startOpened" min-date="minDate" max-date="'2030-06-22'" ng-required="true" close-text="Close"/>
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+			</span>
+		</p>
+		<label>End Date:</label>
+		<p class="input-group">
+			<input type="text" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate" is-open="endOpened" min-date="minDate" max-date="'2030-06-22'" ng-required="true" close-text="Close"/>
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+			</span>
+		</p>
+		<a class="btn btn-success">Create Evaluation</a>
+	</div>
+</div>
 <div class="row text-center well">
 	<div class="col-md-6">
 		<h3> Intro Text - Icelandic </h3>
@@ -77,35 +103,9 @@
 					<td>{{question.TextEN}}</td>
 					<td>{{question.ImageURL}}</td>
 					<td>{{question.Type}}</td>
-					<td>TODO</td>
+					<td>TODO: View Answers</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 </div>
-
-<!--
-<div class="row text-center well">
-	<div class="col-md-12">
-		<h3>Course Questions</h3>
-	</div>
-	<div class="col-md-6 text-left" ng-repeat="question in template.CourseQuestions">
-		<ul class="list-group">
-			<li class="list-group-item">{{question.ID}}</li>
-			<li class="list-group-item">{{question.Text}}</li>
-			<li class="list-group-item">{{question.TextEN}}</li>
-			<li class="list-group-item">{{question.ImageURL}}</li>
-			<li class="list-group-item">{{question.Type}}</li>
-			<li class="list-group-item" ng-repeat="answer in question.Answers">
-				<ul class="list-group">
-					<li class="list-group-item">{{answer.ID}}</li>
-					<li class="list-group-item">{{answer.Text}}</li>
-					<li class="list-group-item">{{answer.TextEN}}</li>
-					<li class="list-group-item">{{answer.ImageURL}}</li>
-					<li class="list-group-item">{{answer.Weight}}</li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-</div>
--->

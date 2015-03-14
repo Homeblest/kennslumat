@@ -176,6 +176,35 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
         .error(function(status) {
             console.log("ERROR: could not fetch template " + $scope.templateID + " with status " + status);
         });
+
+    // Create Evaluation
+
+    // Datepicker popup
+    $scope.showEvaluationForm = false;
+    $scope.NewEvaluationDTO = {};
+
+    $scope.minDate = $scope.minDate ? null : new Date();
+
+    $scope.today = function() {
+        $scope.startDate = new Date();
+    };
+    $scope.today();
+
+    $scope.openStartDate = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.startOpened = true;
+    };
+
+    $scope.openEndDate = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.endOpened = true;
+    };
+
+
 }]);
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
