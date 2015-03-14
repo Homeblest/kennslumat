@@ -62,6 +62,7 @@ evalApp.controller('createTemplateController', function($scope, $rootScope, $sta
         mainFactory.sendTemplate($scope.template)
             .success(function(data, status, headers, config) {
                 console.log("SUCCESS: evaluationtemplate sent with status " + status);
+                console.log($scope.template);
                 $scope.showForm = false;
             })
             .error(function(data, status, headers, config) {
