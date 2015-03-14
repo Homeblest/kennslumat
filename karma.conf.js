@@ -20,7 +20,9 @@ module.exports = function(config) {
             'bower_components/angular-loading-button/angular-loading-button.min.js',
             'bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'bower_components/angular-mocks/angular-mocks.js',
-            'app/finalConcat.js',
+            'app/js/app.js',
+            'app/services/*.js',
+            'app/controllers/*.js',
             'tests/*.js'
         ],
 
