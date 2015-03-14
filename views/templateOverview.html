@@ -8,6 +8,11 @@
 </div>
 
 <div class="row well">
+	<div class="col-md-12 text-center" ng-if="templates.length === 0">
+		<h3> There are no templates! </h3>
+		<h4> Wanna create one now? </h4>
+		<a ui-sref="createTemplateView" class="btn btn-primary">Create a Template!</a>
+	</div>
 	<div class="col-md-3" ng-repeat="template in templates">
 		<div class="panel panel-primary">
 			<div class="panel-heading">

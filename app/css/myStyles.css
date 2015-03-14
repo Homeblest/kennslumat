@@ -1,6 +1,5 @@
 body {
 	background: url(http://subtlepatterns.com/patterns/small_steps.png);
-	text-align: center;
 }
 
 .templateForm {
@@ -14,4 +13,8 @@ textarea {
 .backButton {
 	margin-top: 22px;
 	margin-bottom: 11px;
+}
+.customHeightBox{
+	overflow: auto;
+	max-height: 200px;
 }

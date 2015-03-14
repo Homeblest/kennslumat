@@ -2,15 +2,73 @@
 	<div class="col-md-1">
 		<a ui-sref="templateOverview" class="btn btn-primary backButton"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
 	</div>
-	<div class="col-md-6 col-md-offset-2">
-		<h1> Template number {{template.ID}}: </h1>
+	<div class="col-md-10 text-center page-header">
+		<h1> {{template.Title}} -- {{template.TitleEN}} </h1>
 	</div>
 </div>
 
-<div class="well well-lg">
-	<div class="row">
-		<div class="col-md-12">
-			<h1> {{template.Title}} </h1>
-		</div>
+<div class="row text-center well">
+	<div class="col-md-6">
+		<h3> Intro Text - Icelandic </h3>
+		<hr/>
+	</div>
+	<div class="col-md-6">
+		<h3> Intro Text - English </h3>
+		<hr/>
+	</div>
+	<div class="col-md-6 customHeightBox">
+		<p>{{template.IntroText}}</p>
+	</div>
+	<div class="col-md-6 customHeightBox">
+		<p>{{template.IntroTextEN}}</p>
 	</div>
 </div>
+
+<div class="row well">
+	<div class="col-md-12 text-center">
+		<h3> Course Questions </h3>
+	</div>
+	<div class="col-md-12">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Text</th>
+					<th>Text - English</th>
+					<th>Image URL</th>
+					<th>Type</th>
+					<th>Answers</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!--
+<div class="row text-center well">
+	<div class="col-md-12">
+		<h3>Course Questions</h3>
+	</div>
+	<div class="col-md-6 text-left" ng-repeat="question in template.CourseQuestions">
+		<ul class="list-group">
+			<li class="list-group-item">{{question.ID}}</li>
+			<li class="list-group-item">{{question.Text}}</li>
+			<li class="list-group-item">{{question.TextEN}}</li>
+			<li class="list-group-item">{{question.ImageURL}}</li>
+			<li class="list-group-item">{{question.Type}}</li>
+			<li class="list-group-item" ng-repeat="answer in question.Answers">
+				<ul class="list-group">
+					<li class="list-group-item">{{answer.ID}}</li>
+					<li class="list-group-item">{{answer.Text}}</li>
+					<li class="list-group-item">{{answer.TextEN}}</li>
+					<li class="list-group-item">{{answer.ImageURL}}</li>
+					<li class="list-group-item">{{answer.Weight}}</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+-->
