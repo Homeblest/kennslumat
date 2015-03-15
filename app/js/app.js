@@ -18,7 +18,7 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
             controller: "evalOverViewController"
         })
         .state('evaluationView', {
-            url: '/viewEvaluation/:evaluationID',
+            url: '/viewEvaluation/:evaluationID/:semester/:course',
             templateUrl: "views/evaluationView.html",
             controller: 'evaluationController'
         })

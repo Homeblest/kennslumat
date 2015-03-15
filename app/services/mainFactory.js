@@ -42,6 +42,9 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
         },
         getMyEvaluations: function() {
             return $http.get(server + "my/evaluations");
+        },
+        getEvaluationByCourse: function(course, semester, evalID) {
+            return $http.get(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
         }
     };
 });

@@ -18,7 +18,7 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             controller: "evalOverViewController"
         })
         .state('evaluationView', {
-            url: '/viewEvaluation/:evaluationID',
+            url: '/viewEvaluation/:evaluationID/:semester/:course',
             templateUrl: "views/evaluationView.html",
             controller: 'evaluationController'
         })
@@ -148,16 +148,22 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
             console.log(status + " error in my/evaluations: " + response);
         });
 
-    $scope.viewEvaluation = function(ID) {
+    $scope.viewEvaluation = function(ID, courseName, _semester) {
         $state.go('evaluationView', {
-            "evaluationID": ID
+            "evaluationID": ID,
+            "course": courseName,
+            "semester": _semester
         });
-    	
     };
 
 }]);
-evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", function($scope, $rootScope, $http, $state, $window, mainFactory) {
-	
+evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
+    $scope.courseEvaluation = {};
+
+    mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
+        .success(function(data) {
+            console.log(data);
+        });
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
 
@@ -276,7 +282,7 @@ evalApp.directive('ngQuestion', function() {
 	return {
 		restrict: 'E',
 		template: '<div class="well">Evaluation Question </div>'
-	}
+	};
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
@@ -343,6 +349,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
         },
         getMyEvaluations: function() {
             return $http.get(server + "my/evaluations");
+        },
+        getEvaluationByCourse: function(course, semester, evalID) {
+            return $http.get(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
         }
     };
 }]);

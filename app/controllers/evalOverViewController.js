@@ -16,11 +16,12 @@ evalApp.controller('evalOverViewController', function($scope, $rootScope, $http,
             console.log(status + " error in my/evaluations: " + response);
         });
 
-    $scope.viewEvaluation = function(ID) {
+    $scope.viewEvaluation = function(ID, courseName, _semester) {
         $state.go('evaluationView', {
-            "evaluationID": ID
+            "evaluationID": ID,
+            "course": courseName,
+            "semester": _semester
         });
-    	
     };
 
 });
