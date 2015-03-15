@@ -158,12 +158,13 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 
 }]);
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
-    $scope.courseEvaluation = {};
+    $scope.evaluation = {};
 
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
-            console.log(data);
+            $scope.evaluation = data;
         });
+
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
 

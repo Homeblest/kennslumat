@@ -45,8 +45,4 @@ describe('evalOverViewController', function() {
         });
     }));
 
-    it('getCourses should be called', function() {
-        expect(fakeFactory.getCourses).toHaveBeenCalled();
-    })
-
 });
