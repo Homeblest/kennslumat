@@ -1,4 +1,4 @@
-var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router', 'loadingButton']);
+var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router', 'loadingButton', 'ngAnimate']);
 
 evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
 
@@ -16,11 +16,6 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             url: "/overview",
             templateUrl: "views/evalOverView.html",
             controller: "evalOverViewController"
-        })
-        .state('evaluationView', {
-            url: '/viewEvaluation/:evaluationID/:semester/:course',
-            templateUrl: "views/evaluationView.html",
-            controller: 'evaluationController'
         })
         .state('adminDashboard', {
             url: "/adminDashboard",
@@ -41,6 +36,24 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             url: '/viewTemplate/:templateID',
             templateUrl: "views/viewTemplate.html",
             controller: 'viewTemplateController'
+        })
+        .state('evaluationView', {
+            url: '/viewEvaluation/:evaluationID/:semester/:course',
+            templateUrl: "views/evaluationView.html",
+            controller: 'evaluationController'
+        })
+        // Nested states for evaluation
+        .state('evaluationView.IntroText', {
+            url: '/IntroText',
+            templateUrl: 'views/evaluation_IntroText.html'
+        })
+        .state('evaluationView.CourseQuestions',{
+            url: '/CourseQuestions',
+            templateUrl: 'views/evaluation_CourseQuestions.html'
+        })
+        .state('evaluationView.TeacherQuestions',{
+            url: '/TeacherQuestions',
+            templateUrl: 'views/evaluation_TeacherQuestions.html'
         });
 }]);
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
@@ -158,13 +171,13 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 
 }]);
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
+    $state.go('evaluationView.IntroText');
     $scope.evaluation = {};
 
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
             $scope.evaluation = data;
         });
-
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
 
