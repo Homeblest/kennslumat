@@ -8,6 +8,8 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
                     // Store the token in the window session
                     $window.sessionStorage.token = data.Token;
 
+                    $window.sessionStorage.username = data.User.FullName;
+
                     if (data.User.Role == "admin") {
                         // If user is admin, redirect to the admin page.
                         $state.go("adminDashboard");
@@ -37,6 +39,9 @@ evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
         },
         createEvaluation: function(NewEvaluationDTO) {
             return $http.post(server + 'evaluations', NewEvaluationDTO);
+        },
+        getMyEvaluations: function() {
+            return $http.get(server + "my/evaluations");
         }
     };
 });

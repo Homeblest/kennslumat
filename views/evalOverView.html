@@ -1,8 +1,35 @@
 <div class="row">
-	<div class="col-md-1">
-		<a ui-sref="templateOverview" class="btn btn-primary backButton"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
+	<div class="col-md-6 col-md-offset-3 page-header">
+		<h1> Welcome, {{username}} </h1>
 	</div>
-	<div class="col-md-6 col-md-offset-2">
-		<h1> evalOverview </h1>
+</div>
+<div class="row well" ng-show="showError">
+	<div class="col-md-12">
+		<h1> You have no pending evaluations! </h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<h2> Pending evaluations: </h2>
+	</div>
+</div>
+<div class="row" ng-repeat="evaluation in myEvaluations">
+	<div class="well col-md-6 col-md-offset-3">
+		<div class="row">
+			<div class="col-md-12">
+				<h4>{{evaluation.CourseName}} - {{evaluation.CourseNameEN}} , {{evaluation.Semester}}</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h5>{{evaluation.TemplateName}} - {{evaluation.TemplateNameEN}}</h5>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3 col-md-offset-9">
+				<a ui-sref="#" class="btn btn-success">Evaluate</a>
+			</div>
+		</div>
+		
 	</div>
 </div>

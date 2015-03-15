@@ -20,10 +20,17 @@ evalApp.controller('viewTemplateController', function($scope, $rootScope, $state
 
     $scope.minDate = $scope.minDate ? null : new Date();
 
-    $scope.startDate = new Date();
-    $scope.endDate = new Date();
+    $scope.today = function() {
+        $scope.startDate = new Date();
+        $scope.endDate = new Date();
+    };
+    $scope.today();
 
-
+    $scope.clear = function() {
+    	$scope.startDate = null;
+    	$scope.endDate = null;
+    };
+    
     $scope.openStartDate = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -51,19 +58,19 @@ evalApp.controller('viewTemplateController', function($scope, $rootScope, $state
         $scope.NewEvaluationDTO.TemplateID = $scope.template.ID;
         $scope.NewEvaluationDTO.StartDate = $scope.startDate.toISOString();
         $scope.NewEvaluationDTO.EndDate = $scope.endDate.toISOString();
-        
+
         console.log($scope.NewEvaluationDTO);
         console.log(typeof $scope.NewEvaluationDTO.StartDate);
-        
+
         mainFactory.createEvaluation($scope.NewEvaluationDTO)
             .success(function() {
                 console.log("Evaluation created!");
                 $state.go('adminDashboard');
             })
-            .error(function(data, status, headers, response){
-            	console.log(response + " , " + status);
+            .error(function(data, status, headers, response) {
+                console.log(response + " , " + status);
             });
-        
+
     };
 
 });

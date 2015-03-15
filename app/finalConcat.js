@@ -125,8 +125,23 @@ evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state"
             });
     };
 }]);
-evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "mainFactory", function($scope, $rootScope, $http, $state, mainFactory) {
-	mainFactory.getCourses();
+evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", function($scope, $rootScope, $http, $state, $window, mainFactory) {
+    $scope.username = $window.sessionStorage.username;
+    $scope.myEvaluations = [];
+    $scope.showError = false;
+
+    mainFactory.getMyEvaluations()
+        .success(function(data, status, headers, response) {
+            if (data.length !== 0) {
+                $scope.myEvaluations = data;
+                $scope.showError = false;
+            }else{
+            	$scope.showError = true;
+            }
+        })
+        .error(function(data, status, headers, response) {
+            console.log(status + " error in my/evaluations: " + response);
+        });
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
 
@@ -185,10 +200,17 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 
     $scope.minDate = $scope.minDate ? null : new Date();
 
-    $scope.startDate = new Date();
-    $scope.endDate = new Date();
+    $scope.today = function() {
+        $scope.startDate = new Date();
+        $scope.endDate = new Date();
+    };
+    $scope.today();
 
-
+    $scope.clear = function() {
+    	$scope.startDate = null;
+    	$scope.endDate = null;
+    };
+    
     $scope.openStartDate = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -216,22 +238,28 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
         $scope.NewEvaluationDTO.TemplateID = $scope.template.ID;
         $scope.NewEvaluationDTO.StartDate = $scope.startDate.toISOString();
         $scope.NewEvaluationDTO.EndDate = $scope.endDate.toISOString();
-        
+
         console.log($scope.NewEvaluationDTO);
         console.log(typeof $scope.NewEvaluationDTO.StartDate);
-        
+
         mainFactory.createEvaluation($scope.NewEvaluationDTO)
             .success(function() {
                 console.log("Evaluation created!");
                 $state.go('adminDashboard');
             })
-            .error(function(data, status, headers, response){
-            	console.log(response + " , " + status);
+            .error(function(data, status, headers, response) {
+                console.log(response + " , " + status);
             });
-        
+
     };
 
 }]);
+evalApp.directive('ngQuestion', function() {
+	return {
+		restrict: 'E',
+		template: '<div class="well">Evaluation Question </div>'
+	}
+});
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
         request: function(config) {
@@ -263,6 +291,8 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
                     // Store the token in the window session
                     $window.sessionStorage.token = data.Token;
 
+                    $window.sessionStorage.username = data.User.FullName;
+
                     if (data.User.Role == "admin") {
                         // If user is admin, redirect to the admin page.
                         $state.go("adminDashboard");
@@ -292,6 +322,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
         },
         createEvaluation: function(NewEvaluationDTO) {
             return $http.post(server + 'evaluations', NewEvaluationDTO);
+        },
+        getMyEvaluations: function() {
+            return $http.get(server + "my/evaluations");
         }
     };
 }]);
