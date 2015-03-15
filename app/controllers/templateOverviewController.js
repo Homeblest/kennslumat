@@ -11,7 +11,9 @@ evalApp.controller('templateOverviewController', function($scope, $rootScope, $s
         });
 
     $scope.viewTemplate = function(ID) {
-    	$state.go('viewTemplate', {"templateID": ID});
+        $state.go('viewTemplate', {
+            "templateID": ID
+        });
     };
     
 });

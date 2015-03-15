@@ -17,6 +17,11 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             templateUrl: "views/evalOverView.html",
             controller: "evalOverViewController"
         })
+        .state('evaluationView', {
+            url: '/viewEvaluation/:evaluationID',
+            templateUrl: "views/evaluationView.html",
+            controller: 'evaluationController'
+        })
         .state('adminDashboard', {
             url: "/adminDashboard",
             templateUrl: "views/adminDashboard.html",
@@ -135,13 +140,24 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
             if (data.length !== 0) {
                 $scope.myEvaluations = data;
                 $scope.showError = false;
-            }else{
-            	$scope.showError = true;
+            } else {
+                $scope.showError = true;
             }
         })
         .error(function(data, status, headers, response) {
             console.log(status + " error in my/evaluations: " + response);
         });
+
+    $scope.viewEvaluation = function(ID) {
+        $state.go('evaluationView', {
+            "evaluationID": ID
+        });
+    	
+    };
+
+}]);
+evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", function($scope, $rootScope, $http, $state, $window, mainFactory) {
+	
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
 
@@ -174,7 +190,9 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
         });
 
     $scope.viewTemplate = function(ID) {
-    	$state.go('viewTemplate', {"templateID": ID});
+        $state.go('viewTemplate', {
+            "templateID": ID
+        });
     };
     
 }]);
