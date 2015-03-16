@@ -22,7 +22,8 @@ describe('adminDashboardController: ', function() {
                 return deferred.promise;
             }
         };
-        spyOn(fakeFactory, 'goToCreateTemplateView').and.callThrough();
+        spyOn(fakeFactory, 'goToCreateTemplateView');
+        fakeFactory.goToCreateTemplateView();
     });
 
     //Inject fake factory into controller
@@ -42,14 +43,15 @@ describe('adminDashboardController: ', function() {
     }));
 
     it('check if goToCreateTemplateView has been called', function() {
-        expect(fakeFactory.goToCreateTemplateView).not.toHaveBeenCalled();
+        //scope.goToCreateTemplateView();
+        expect(fakeFactory.goToCreateTemplateView).toHaveBeenCalled();
     })
 
-/*
+
     it("goToCreateTemplateView should change states", function() {
         scope.goToCreateTemplateView();
         expect(state.current.name).toEqual('createTemplateView');
     });
-*/
+
 
 });
