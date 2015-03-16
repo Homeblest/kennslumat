@@ -59,6 +59,7 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
 
     $scope.goToCreateTemplateView = function() {
+    	console.log("running");
         $state.go('createTemplateView');
     };
 
@@ -295,7 +296,7 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 evalApp.directive('ngQuestion', function() {
 	return {
 		restrict: 'E',
-		template: '<div class="well">Evaluation Question </div>'
+		templateUrl: 'views/ngQuestion.html'
 	};
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
