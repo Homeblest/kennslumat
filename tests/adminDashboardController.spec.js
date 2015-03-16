@@ -1,4 +1,5 @@
-describe('adminDashboardController', function() {
+describe('adminDashboardController: ', function() {
+
     beforeEach(module('evalApp'));
 
     var scope,
@@ -25,10 +26,12 @@ describe('adminDashboardController', function() {
     });
 
     //Inject fake factory into controller
-    beforeEach(inject(function($rootScope, $controller, mainFactory, $state) {
+    beforeEach(inject(function($rootScope, $controller, $q, mainFactory, $httpBackend, $state) {
+        httpBackend = $httpBackend;
         rootScope = $rootScope;
         scope = $rootScope.$new();
-        state = $state;
+        q = $q;
+        state = $state
         controller = $controller('adminDashboardController', {
             $scope: scope,
             mainFactory: fakeFactory,
@@ -41,5 +44,12 @@ describe('adminDashboardController', function() {
     it('check if goToCreateTemplateView has been called', function() {
         expect(fakeFactory.goToCreateTemplateView).not.toHaveBeenCalled();
     })
+
+/*
+    it("goToCreateTemplateView should change states", function() {
+        scope.goToCreateTemplateView();
+        expect(state.current.name).toEqual('createTemplateView');
+    });
+*/
 
 });

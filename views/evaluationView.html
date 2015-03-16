@@ -1,0 +1,26 @@
+<div class="row">
+	<div class="col-md-2">
+		<a ui-sref="evalOverView" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
+	</div>
+</div>
+<div class="row">
+	<div class="well col-md-8 col-md-offset-2">
+		<div id="form-container">
+			<div class="page-header text-center">
+				<h2>{{evaluation.Title}} - {{evaluation.TitleEN}}</h2>
+
+				<div id="status-buttons" class="text-center">
+					<a ui-sref-active="active" ui-sref=".IntroText"><span>1</span>Intro</a>
+					<a ui-sref-active="active" ui-sref=".CourseQuestions"><span>2</span>Course</a>
+					<a ui-sref-active="active" ui-sref=".TeacherQuestions"><span>3</span>Teachers</a>
+				</div>
+			</div>
+
+			<form id="signup-form" ng-submit="processForm()">
+
+				<div id="form-views" ui-view></div>
+			</form>
+
+		</div>
+	</div>
+</div>

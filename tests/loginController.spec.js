@@ -64,22 +64,16 @@ describe('loginController:', function() {
         // Execute the login function
         scope.login();
 
-        httpBackend.expectPOST('http://localhost:19358/api/v1/login', scope.loginData);
-
-        // Expect the controller to have filled in the object.
-        expect(scope.loginData.user).toBeDefined();
-        expect(scope.loginData.pass).toBeDefined();
-
         // Expect the login function to have called the login service
         expect(fakeFactory.login).toHaveBeenCalled();
 
+        // Expect the login function to have called the server.
+        httpBackend.expectPOST('http://localhost:19358/api/v1/login', scope.loginData);
+
+        // Expect the controller to have filled in the object.
+        expect(scope.loginData.user).toBe('hjaltil13');
+        expect(scope.loginData.pass).toBe('12345');
+        
     });
-/*
-    it('should send an HTTP POST request', function() {
-        httpBackend.verifyNoOutstandingExpectation();
-        httpBackend.verifyNoOutstandingRequest();
-    });
-*/
 
 });
-

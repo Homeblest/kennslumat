@@ -1,4 +1,4 @@
-var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router', 'loadingButton']);
+var evalApp = angular.module("evalApp", ['ui.bootstrap', 'ui.router', 'loadingButton', 'ngAnimate']);
 
 evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
 
@@ -36,11 +36,30 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             url: '/viewTemplate/:templateID',
             templateUrl: "views/viewTemplate.html",
             controller: 'viewTemplateController'
+        })
+        .state('evaluationView', {
+            url: '/viewEvaluation/:evaluationID/:semester/:course',
+            templateUrl: "views/evaluationView.html",
+            controller: 'evaluationController'
+        })
+        // Nested states for evaluation
+        .state('evaluationView.IntroText', {
+            url: '/IntroText',
+            templateUrl: 'views/evaluation_IntroText.html'
+        })
+        .state('evaluationView.CourseQuestions',{
+            url: '/CourseQuestions',
+            templateUrl: 'views/evaluation_CourseQuestions.html'
+        })
+        .state('evaluationView.TeacherQuestions',{
+            url: '/TeacherQuestions',
+            templateUrl: 'views/evaluation_TeacherQuestions.html'
         });
 }]);
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
 
     $scope.goToCreateTemplateView = function() {
+    	console.log("running");
         $state.go('createTemplateView');
     };
 
@@ -135,12 +154,30 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
             if (data.length !== 0) {
                 $scope.myEvaluations = data;
                 $scope.showError = false;
-            }else{
-            	$scope.showError = true;
+            } else {
+                $scope.showError = true;
             }
         })
         .error(function(data, status, headers, response) {
             console.log(status + " error in my/evaluations: " + response);
+        });
+
+    $scope.viewEvaluation = function(ID, courseName, _semester) {
+        $state.go('evaluationView', {
+            "evaluationID": ID,
+            "course": courseName,
+            "semester": _semester
+        });
+    };
+
+}]);
+evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
+    $state.go('evaluationView.IntroText');
+    $scope.evaluation = {};
+
+    mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
+        .success(function(data) {
+            $scope.evaluation = data;
         });
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
@@ -174,7 +211,9 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
         });
 
     $scope.viewTemplate = function(ID) {
-    	$state.go('viewTemplate', {"templateID": ID});
+        $state.go('viewTemplate', {
+            "templateID": ID
+        });
     };
     
 }]);
@@ -257,8 +296,8 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 evalApp.directive('ngQuestion', function() {
 	return {
 		restrict: 'E',
-		template: '<div class="well">Evaluation Question </div>'
-	}
+		templateUrl: 'views/ngQuestion.html'
+	};
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
@@ -325,6 +364,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
         },
         getMyEvaluations: function() {
             return $http.get(server + "my/evaluations");
+        },
+        getEvaluationByCourse: function(course, semester, evalID) {
+            return $http.get(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
         }
     };
 }]);
