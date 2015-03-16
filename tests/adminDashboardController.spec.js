@@ -1,52 +1,45 @@
 describe('adminDashboardController', function() {
     beforeEach(module('evalApp'));
-/*
+
     var scope,
         rootScope,
         fakeFactory,
         controller,
         q,
         deferred,
-        httpBackend;
+        httpBackend,
+        state;
 
     beforeEach(function() {
         fakeFactory = {
-            login: function(loginData) {
-
+            goToCreateTemplateView: function() {
                 deferred = q.defer();
 
                 // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
-            },
-            getCourses: function() {
-                deferred = q.defer();
-
-                // Place the fake return object here
-                deferred.resolve();
+                deferred.resolve({state: 'createTemplateView'});
 
                 return deferred.promise;
             }
         };
-        spyOn(fakeFactory, 'getCourses').and.callThrough();
+        spyOn(fakeFactory, 'goToCreateTemplateView').and.callThrough();
     });
 
     //Inject fake factory into controller
-    beforeEach(inject(function($rootScope, $controller, $q, mainFactory) {
+    beforeEach(inject(function($rootScope, $controller, mainFactory, $state) {
         rootScope = $rootScope;
         scope = $rootScope.$new();
-        q = $q;
+        state = $state;
         controller = $controller('adminDashboardController', {
             $scope: scope,
             mainFactory: fakeFactory,
             $rootScope: rootScope,
-            $httpBackend: httpBackend
+            $state: state
         });
+
     }));
 
-    it('', function() {
-        expect(fakeFactory.getCourses).toHaveBeenCalled();
+    it('check if goToCreateTemplateView has been called', function() {
+        expect(fakeFactory.goToCreateTemplateView).not.toHaveBeenCalled();
     })
-*/
+
 });
