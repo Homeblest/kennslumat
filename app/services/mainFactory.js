@@ -1,4 +1,4 @@
-evalApp.factory('mainFactory', function($http, $window, $rootScope, $state) {
+evalApp.factory('mainFactory', function($http) {
     var server = "http://localhost:19358/api/v1/";
     return {
         login: function(loginData) {

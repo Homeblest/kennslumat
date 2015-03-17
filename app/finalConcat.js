@@ -184,6 +184,7 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$
 
     $scope.isSuccess = false;
     $scope.loginData = {};
+    $scope.error = false;
 
     /*
         Fills the loginData object with user and pass,
@@ -213,9 +214,11 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$
                 // Erase the token if user fails to log in
                 delete $window.sessionStorage.token;
                 delete $window.sessionStorage.username;
+
+                if(status === 401) {
+                    $scope.error = true;
+                }
                 
-                // TODO: Log the errors in a better way
-                console.log('Error: ' + status);
             });
     };
 
@@ -338,9 +341,6 @@ evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($roo
             return response || $q.when(response);
         },
         responseError: function(rejection) {
-            if (rejection.status === 401) {
-                console.log("auth error");
-            }
             return $q.reject(rejection);
         }
     };
@@ -349,7 +349,7 @@ evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($roo
 evalApp.config(["$httpProvider", function($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 }]);
-evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", function($http, $window, $rootScope, $state) {
+evalApp.factory('mainFactory', ["$http", function($http) {
     var server = "http://localhost:19358/api/v1/";
     return {
         login: function(loginData) {

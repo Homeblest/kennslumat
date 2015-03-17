@@ -2,6 +2,7 @@ evalApp.controller('loginController', function($scope, $rootScope, mainFactory, 
 
     $scope.isSuccess = false;
     $scope.loginData = {};
+    $scope.error = false;
 
     /*
         Fills the loginData object with user and pass,
@@ -31,9 +32,11 @@ evalApp.controller('loginController', function($scope, $rootScope, mainFactory, 
                 // Erase the token if user fails to log in
                 delete $window.sessionStorage.token;
                 delete $window.sessionStorage.username;
+
+                if(status === 401) {
+                    $scope.error = true;
+                }
                 
-                // TODO: Log the errors in a better way
-                console.log('Error: ' + status);
             });
     };
 

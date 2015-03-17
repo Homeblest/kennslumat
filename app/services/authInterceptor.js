@@ -15,9 +15,6 @@ evalApp.factory('authInterceptor', function($rootScope, $q, $window) {
             return response || $q.when(response);
         },
         responseError: function(rejection) {
-            if (rejection.status === 401) {
-                console.log("auth error");
-            }
             return $q.reject(rejection);
         }
     };
