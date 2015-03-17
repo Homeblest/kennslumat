@@ -42,12 +42,12 @@ describe('createTemplateController: ', function() {
         spyOn(scope, "sendTemplate").and.callThrough();
         spyOn(scope, "addAnswer").and.callThrough();
         spyOn(fakeFactory, 'login').and.callThrough();
-
     }));
 
-    it("should initialize showform as true and courseQuestionsID as 0", function() {
+    it("should initialize values correctly", function() {
         expect(scope.showForm).toBeTruthy();
         expect(scope.courseQuestionsID).toBe(0);
+        expect(scope.teacherQuestionsID).toBe(1);
     });
 
     it("should initialize questionTypes with values", function() {
@@ -61,4 +61,7 @@ describe('createTemplateController: ', function() {
         expect(scope.template.CourseQuestions.length).toBe(1);
     });
 
+    it("should push a new answer into question's answer array", function() {
+        
+    })
 });

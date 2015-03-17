@@ -78,68 +78,68 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
 }]);
 evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
 
-    if ($window.sessionStorage.role !== 'admin') {
-        console.log("Unauthorized user in createTemplateController, redirect");
-        $state.go("loginView");
+    // Template object constructor
+    function Template(_ID, _Title, _TitleEN, _IntroText, _IntroTextEN, _CourseQuestions, _TeacherQuestions) {
+        this.ID = _ID;
+        this.Title = _Title;
+        this.TitleEN = _TitleEN;
+        this.IntroText = _IntroText;
+        this.IntroTextEN = _IntroTextEN;
+        this.CourseQuestions = _CourseQuestions;
+        this.TeacherQuestions = _TeacherQuestions;
     }
 
-    $scope.template = {
-        ID: null,
-        Title: "",
-        TitleEN: "",
-        IntroText: "",
-        IntroTextEN: "",
-        CourseQuestions: [],
-        TeacherQuestions: []
-    };
+    function Question(_ID, _Text, _TextEN, _ImageURL, _Type, _Answers) {
+        this.ID = _ID;
+        this.Text = _Text;
+        this.TextEN = _TextEN;
+        this.ImageURL = _ImageURL;
+        this.Type = _Type;
+        this.Answers = _Answers;
+    }
 
-    $rootScope.showForm = true;
+    function Answer(_ID, _Text, _TextEN, _ImageURL, _Weight) {
+        this.ID = _ID;
+        this.Text = _Text;
+        this.TextEN = _TextEN;
+        this.ImageURL = _ImageURL;
+        this.Weight = _Weight;
+    }
 
+    // Create a new empty template
+    $scope.template = new Template(null, "", "", "", "", [], []);
+    $scope.showForm = true;
     $scope.questionTypes = ["text", "single", "multiple"];
 
     $scope.courseQuestionsID = 0;
 
     $scope.addCourseQuestion = function(_type) {
-        $scope.template.CourseQuestions.push({
-            ID: $scope.courseQuestionsID,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Type: _type,
-            Answers: []
-        });
+        var newQuestion = new Question($scope.courseQuestionsID, "", "", "", _type, []);
+        $scope.template.CourseQuestions.push(newQuestion);
         $scope.courseQuestionsID += 1;
     };
 
     $scope.teacherQuestionsID = 0;
 
     $scope.addTeacherQuestion = function(_type) {
-        $scope.template.TeacherQuestions.push({
-            ID: $scope.teacherQuestionsID,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Type: _type,
-            Answers: []
-        });
+        var newQuestion = new Question($scope.teacherQuestionsID, "", "", "", _type, []);
+        $scope.template.TeacherQuestions.push(newQuestion);
         $scope.teacherQuestionsID += 1;
     };
 
-    // Make sure there is at least one question form available.
+    // Make sure there is at least one teacher question form available.
     $scope.addTeacherQuestion($scope.questionTypes[0]);
 
     $scope.addAnswer = function(question) {
-        question.Answers.push({
-            ID: question.Answers.length,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Weight: 0
-        });
+        var newAnswer = new Answer(question.Answers.length, "", "", "", 0);
+        question.Answers.push(newAnswer);
     };
 
     $scope.sendTemplate = function() {
-        mainFactory.sendTemplate($scope.template);
+        console.log($scope.template);
+        if(mainFactory.sendTemplate($scope.template)){
+            $scope.showForm = false;
+        }
     };
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", function($scope, $rootScope, $http, $state, $window, mainFactory) {
@@ -366,15 +366,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", func
             return $http.get(server + 'my/courses');
         },
         sendTemplate: function(template) {
-            return $http.post(server + "evaluationtemplates", template)
-                .success(function(data, status, headers, config) {
-                    console.log("SUCCESS: evaluationtemplate sent with status " + status);
-                    console.log($scope.template);
-                    $rootScope.showForm = false;
-                })
-                .error(function(data, status, headers, config) {
-                    console.log("ERROR: evaluationtemplate errored with status " + status);
-                });
+            return $http.post(server + "evaluationtemplates", template);
         },
         getAllTemplates: function() {
             return $http.get(server + "evaluationtemplates");
