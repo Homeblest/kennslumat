@@ -1,4 +1,4 @@
-evalApp.controller('loginController', function($scope, $rootScope, mainFactory, $window) {
+evalApp.controller('loginController', function($scope, $rootScope, mainFactory, $window, $state) {
 
     $scope.isSuccess = false;
     $scope.loginData = {};

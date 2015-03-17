@@ -180,7 +180,7 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
             $scope.evaluation = data;
         });
 }]);
-evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", function($scope, $rootScope, mainFactory, $window) {
+evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
     $scope.isSuccess = false;
     $scope.loginData = {};
