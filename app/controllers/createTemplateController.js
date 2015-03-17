@@ -1,5 +1,9 @@
 evalApp.controller('createTemplateController', function($scope, $rootScope, $state, mainFactory) {
 
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user, redirect");
+        $state.go("loginView");
+    }
     $scope.template = {
         ID: null,
         Title: "",

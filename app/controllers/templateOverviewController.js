@@ -1,5 +1,9 @@
 evalApp.controller('templateOverviewController', function($scope, $rootScope, $state, mainFactory, $stateParams) {
 
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user, redirect");
+        $state.go("loginView");
+    }
     $scope.templates = [];
 
     mainFactory.getAllTemplates()
@@ -15,5 +19,5 @@ evalApp.controller('templateOverviewController', function($scope, $rootScope, $s
             "templateID": ID
         });
     };
-    
+
 });

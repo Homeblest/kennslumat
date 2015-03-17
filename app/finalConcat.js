@@ -56,10 +56,14 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             templateUrl: 'views/evaluation_TeacherQuestions.html'
         });
 }]);
-evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
 
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user, redirect");
+        $state.go("loginView");
+    }
     $scope.goToCreateTemplateView = function() {
-    	console.log("running");
+        console.log("running");
         $state.go('createTemplateView');
     };
 
@@ -74,6 +78,10 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
 }]);
 evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
 
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user, redirect");
+        $state.go("loginView");
+    }
     $scope.template = {
         ID: null,
         Title: "",
@@ -202,6 +210,8 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$
 
                 $window.sessionStorage.username = data.User.FullName;
 
+                $window.sessionStorage.role = data.User.Role;
+
                 if (data.User.Role == "admin") {
                     // If user is admin, redirect to the admin page.
                     $state.go("adminDashboard");
@@ -225,6 +235,10 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$
 }]);
 evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
 
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user, redirect");
+        $state.go("loginView");
+    }
     $scope.templates = [];
 
     mainFactory.getAllTemplates()
@@ -240,9 +254,14 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
             "templateID": ID
         });
     };
-    
+
 }]);
 evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
+
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user, redirect");
+        $state.go("loginView");
+    }
     // The template ID should now be in state params
     $scope.templateID = $stateParams.templateID;
     $scope.template = {};
@@ -271,10 +290,10 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
     $scope.today();
 
     $scope.clear = function() {
-    	$scope.startDate = null;
-    	$scope.endDate = null;
+        $scope.startDate = null;
+        $scope.endDate = null;
     };
-    
+
     $scope.openStartDate = function($event) {
         $event.preventDefault();
         $event.stopPropagation();

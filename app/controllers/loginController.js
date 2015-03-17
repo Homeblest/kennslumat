@@ -20,6 +20,8 @@ evalApp.controller('loginController', function($scope, $rootScope, mainFactory, 
 
                 $window.sessionStorage.username = data.User.FullName;
 
+                $window.sessionStorage.role = data.User.Role;
+
                 if (data.User.Role == "admin") {
                     // If user is admin, redirect to the admin page.
                     $state.go("adminDashboard");
