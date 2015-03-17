@@ -21,6 +21,26 @@ textarea {
 	border: 1px solid gray;
 }
 
+/* directive styling */
+.QuestionDirectiveClass {
+    background-color: rgba(255, 255, 255, 0.18);
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.QuestionDirectiveIMG {
+    height: 150px;
+    float: right;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.QuestionDirectiveAnsIMG {
+    float: none;
+    height: 100px;
+    padding: 10px;
+    border-radius: 15px;
+}
 /* form styling */
 #form-container                { background:#2f2f2f; margin-bottom:20px;
     border-radius:5px; }

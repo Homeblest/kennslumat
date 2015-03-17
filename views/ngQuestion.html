@@ -1,4 +1,17 @@
-<div class="form-group">
-	<label>{{question.ID}}</label>
-	<p>{{question.Text}}</p>
+<div class="form-group QuestionDirectiveClass">
+	<label>{{question.ID}}</label><img ng-if="answer.ImageURL!=''" ng-src="{{question.ImageURL}}" class="QuestionDirectiveIMG"/>
+	<p>{{question.Text}}</p><p><i> - {{question.TextEN}} </i></p>
+	<div ng-if="question.Type=='text'">
+		<textarea class="form-control" rows="4"></textarea>
+	</div>
+	<div ng-if="question.Type=='single'" class="btn-group-vertical">
+		<label ng-repeat="answer in question.Answers" class="btn btn-default">
+			<input type="radio" name="radioQuestion" value="{{answer.ID}}"/>{{answer.Text}} <i> - {{answer.TextEN}}</i><img ng-if="answer.ImageURL!=''" ng-src="{{answer.ImageURL}}" class="QuestionDirectiveAnsIMG"/>
+		</label>
+	</div>
+	<div ng-if="question.Type=='multiple'" class="btn-group-vertical">
+		<label ng-repeat="answer in question.Answers" class="btn btn-default">
+			<input type="checkbox" name="checkboxQuestion" value="{{answer.ID}}"/>{{answer.Text}} <i> - {{answer.TextEN}}</i><img ng-if="answer.ImageURL!=''" ng-src="{{answer.ImageURL}}" class="QuestionDirectiveAnsIMG"/>
+		</label>
+	</div>
 </div>
