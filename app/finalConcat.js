@@ -76,7 +76,7 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
     };
 
 }]);
-evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
 
     if ($window.sessionStorage.role !== 'admin') {
         console.log("Unauthorized user, redirect");
@@ -231,7 +231,7 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$
     };
 
 }]);
-evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
+evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", "$window", function($scope, $rootScope, $state, mainFactory, $stateParams, $window) {
 
     if ($window.sessionStorage.role !== 'admin') {
         console.log("Unauthorized user, redirect");
@@ -254,7 +254,7 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
     };
 
 }]);
-evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
+evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", "$window", function($scope, $rootScope, $state, mainFactory, $stateParams, $window) {
 
     if ($window.sessionStorage.role !== 'admin') {
         console.log("Unauthorized user, redirect");
