@@ -7,11 +7,18 @@ evalApp.factory('authInterceptor', function($rootScope, $q, $window) {
             }
             return config;
         },
+        requestError: function(rejection) {
+            return $q.reject(rejection);
+        },
+
         response: function(response) {
-            if (response.status === 401) {
-                //Handle the case where the user is not authorized
-            }
             return response || $q.when(response);
+        },
+        responseError: function(rejection) {
+            if (rejection.status === 401) {
+                console.log("auth error");
+            }
+            return $q.reject(rejection);
         }
     };
 });

@@ -180,7 +180,7 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
             $scope.evaluation = data;
         });
 }]);
-evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
+evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", function($scope, $rootScope, mainFactory, $window) {
 
     $scope.isSuccess = false;
     $scope.loginData = {};
@@ -194,7 +194,29 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", fu
         $scope.loginData.user = $scope.username;
         $scope.loginData.pass = $scope.password;
 
-        mainFactory.login($scope.loginData);
+        mainFactory.login($scope.loginData)
+            .success(function(data) {
+                // Store the token in the window session
+                $window.sessionStorage.token = data.Token;
+
+                $window.sessionStorage.username = data.User.FullName;
+
+                if (data.User.Role == "admin") {
+                    // If user is admin, redirect to the admin page.
+                    $state.go("adminDashboard");
+                } else {
+                    // If normal user, redirect to overview.
+                    $state.go("evalOverView");
+                }
+            })
+            .error(function(data, status, headers, config) {
+                // Erase the token if user fails to log in
+                delete $window.sessionStorage.token;
+                delete $window.sessionStorage.username;
+                
+                // TODO: Log the errors in a better way
+                console.log('Error: ' + status);
+            });
     };
 
 }]);
@@ -308,11 +330,18 @@ evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($roo
             }
             return config;
         },
+        requestError: function(rejection) {
+            return $q.reject(rejection);
+        },
+
         response: function(response) {
-            if (response.status === 401) {
-                //Handle the case where the user is not authorized
-            }
             return response || $q.when(response);
+        },
+        responseError: function(rejection) {
+            if (rejection.status === 401) {
+                console.log("auth error");
+            }
+            return $q.reject(rejection);
         }
     };
 }]);
@@ -324,28 +353,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
     var server = "http://localhost:19358/api/v1/";
     return {
         login: function(loginData) {
-            // Log the user in, using the loginData object for authorization.
-            $http.post(server + "login", loginData)
-                .success(function(data) {
-                    // Store the token in the window session
-                    $window.sessionStorage.token = data.Token;
-
-                    $window.sessionStorage.username = data.User.FullName;
-
-                    if (data.User.Role == "admin") {
-                        // If user is admin, redirect to the admin page.
-                        $state.go("adminDashboard");
-                    } else {
-                        // If normal user, redirect to overview.
-                        $state.go("evalOverView");
-                    }
-                })
-                .error(function(data, status, headers, config) {
-                    // Erase the token if user fails to log in
-                    delete $window.sessionStorage.token;
-                    // TODO: Log the errors in a better way
-                    console.log('Error: ' + status);
-                });
+            return $http.post(server + "login", loginData);
         },
         getCourses: function() {
             $http.get(server + 'my/courses');

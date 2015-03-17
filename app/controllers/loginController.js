@@ -1,4 +1,4 @@
-evalApp.controller('loginController', function($scope, $rootScope, mainFactory) {
+evalApp.controller('loginController', function($scope, $rootScope, mainFactory, $window) {
 
     $scope.isSuccess = false;
     $scope.loginData = {};
@@ -12,7 +12,29 @@ evalApp.controller('loginController', function($scope, $rootScope, mainFactory) 
         $scope.loginData.user = $scope.username;
         $scope.loginData.pass = $scope.password;
 
-        mainFactory.login($scope.loginData);
+        mainFactory.login($scope.loginData)
+            .success(function(data) {
+                // Store the token in the window session
+                $window.sessionStorage.token = data.Token;
+
+                $window.sessionStorage.username = data.User.FullName;
+
+                if (data.User.Role == "admin") {
+                    // If user is admin, redirect to the admin page.
+                    $state.go("adminDashboard");
+                } else {
+                    // If normal user, redirect to overview.
+                    $state.go("evalOverView");
+                }
+            })
+            .error(function(data, status, headers, config) {
+                // Erase the token if user fails to log in
+                delete $window.sessionStorage.token;
+                delete $window.sessionStorage.username;
+                
+                // TODO: Log the errors in a better way
+                console.log('Error: ' + status);
+            });
     };
 
 });
