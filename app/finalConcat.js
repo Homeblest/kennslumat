@@ -225,9 +225,7 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$
                 delete $window.sessionStorage.token;
                 delete $window.sessionStorage.username;
 
-                if(status === 401) {
-                    $scope.error = true;
-                }
+                $scope.error = true;
                 
             });
     };
