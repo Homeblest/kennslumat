@@ -173,10 +173,11 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
     $state.go('evaluationView.IntroText');
     $scope.evaluation = {};
 
-    mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
-        .success(function(data) {
-            $scope.evaluation = data;
-        });
+    var response = mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID);
+
+    response.success(function(data){
+    	$scope.evaluation = data;
+    });
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
