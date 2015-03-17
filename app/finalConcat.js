@@ -190,6 +190,16 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
+    if($window.sessionStorage.user !== ''){
+        console.log("Already logged in");
+        if($window.sessionStorage.role === "admin"){
+            $state.go("adminDashboard");
+        }else {
+            $state.go("evalOverView");
+        }
+        
+    }
+
     $scope.isSuccess = false;
     $scope.loginData = {};
     $scope.error = false;
