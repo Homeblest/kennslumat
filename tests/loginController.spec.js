@@ -8,41 +8,39 @@ describe('loginController:', function() {
         controller,
         q,
         deferred,
-        httpBackend;
+        window,
+        state;
 
     beforeEach(function() {
         fakeFactory = {
             login: function(loginData) {
-
-                deferred = q.defer();
-                // Place the fake return object here
-                deferred.resolve({
-                    "one": "three"
-                });
-                return deferred.promise;
+                return {
+                    Token: "myToken",
+                    User: {
+                        FullName: "Administrator",
+                        Role: "admin"
+                    }
+                };
             },
             getCourses: function() {
-                deferred = q.defer();
-
-                // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
             }
         };
         spyOn(fakeFactory, 'login').and.callThrough();
+        spyOn(scope, 'login').and.callThrough();
     });
 
     //Inject fake factory into controller
-    beforeEach(inject(function($rootScope, $controller, $q, mainFactory, $httpBackend) {
-        httpBackend = $httpBackend;
+    beforeEach(inject(function($controller, $rootScope, mainFactory, $window, $state) {
+        window = $window;
+        state = $state;
         rootScope = $rootScope;
         scope = $rootScope.$new();
-        q = $q;
         controller = $controller('loginController', {
             $scope: scope,
+            $rootScope: rootScope,
             mainFactory: fakeFactory,
-            $rootScope: rootScope
+            $window: window,
+            $state: state
         });
 
     }));
@@ -60,7 +58,7 @@ describe('loginController:', function() {
         // fill username and pass with static data
         scope.username = "hjaltil13";
         scope.password = "12345";
-
+        console.log(scope);
         // Execute the login function
         scope.login();
 
