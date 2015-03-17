@@ -7,42 +7,36 @@ describe('evalOverViewController', function() {
         controller,
         q,
         deferred,
-        httpBackend;
+        window,
+        state;
 
     beforeEach(function() {
         fakeFactory = {
             login: function(loginData) {
-
-                deferred = q.defer();
-
-                // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
-            },
-            getCourses: function() {
-                deferred = q.defer();
-
-                // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
+                return {
+                    Token: "myToken",
+                    User: {
+                        FullName: "Administrator",
+                        Role: "admin"
+                    }
+                };
             }
-        };
-        spyOn(fakeFactory, 'getCourses').and.callThrough();
+        }
     });
 
-    //Inject fake factory into controller
-    beforeEach(inject(function($rootScope, $controller, $q, mainFactory) {
-        rootScope = $rootScope;
-        scope = $rootScope.$new();
-        q = $q;
-        controller = $controller('evalOverViewController', {
+    beforeEach(inject(function($injector) {
+
+        scope = $injector.get('$rootScope');
+        $controller = $injector.get('$controller');
+        httpBackend = $injector.get('$httpBackend');
+        controller = $controller('loginController', {
             $scope: scope,
-            mainFactory: fakeFactory,
-            $rootScope: rootScope,
-            $httpBackend: httpBackend
+            mainFactory: fakeFactory
         });
+
+        spyOn(scope, "callLogin").and.callThrough();
+        spyOn(fakeFactory, 'login').and.callThrough();
+
     }));
 
 });

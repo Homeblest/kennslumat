@@ -8,53 +8,36 @@ describe('adminDashboardController: ', function() {
         controller,
         q,
         deferred,
-        httpBackend,
+        window,
         state;
 
     beforeEach(function() {
         fakeFactory = {
-            goToCreateTemplateView: function() {
-                deferred = q.defer();
-
-                state.go('createTemplateView');
-                // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
+            login: function(loginData) {
+                return {
+                    Token: "myToken",
+                    User: {
+                        FullName: "Administrator",
+                        Role: "admin"
+                    }
+                };
             }
-        };
-        spyOn(fakeFactory, 'goToCreateTemplateView').and.callThrough();
-        //spyOn(state, 'go');
-        //fakeFactory.goToCreateTemplateView();
+        }
     });
 
-    //Inject fake factory into controller
-    beforeEach(inject(function($rootScope, $controller, $q, mainFactory, $httpBackend, $state) {
-        httpBackend = $httpBackend;
-        rootScope = $rootScope;
-        scope = $rootScope.$new();
-        q = $q;
-        state = $state
-        controller = $controller('adminDashboardController', {
+    beforeEach(inject(function($injector) {
+
+        scope = $injector.get('$rootScope');
+        $controller = $injector.get('$controller');
+        httpBackend = $injector.get('$httpBackend');
+        controller = $controller('loginController', {
             $scope: scope,
-            mainFactory: fakeFactory,
-            $rootScope: rootScope,
-            $state: state
+            mainFactory: fakeFactory
         });
 
+        spyOn(scope, "callLogin").and.callThrough();
+        spyOn(fakeFactory, 'login').and.callThrough();
+
     }));
-
-/*    it('check if goToCreateTemplateView has been called', function() {
-        //scope.goToCreateTemplateView();
-        expect(scope.goToCreateTemplateView).toHaveBeenCalled();
-    })
-
-
-    it("goToCreateTemplateView should change states", function() {
-        scope.goToCreateTemplateView();
-        spyOn(state, 'go');
-        expect(state.go).toHaveBeenCalledWith('createTemplateView');
-    });
-*/
 
 });

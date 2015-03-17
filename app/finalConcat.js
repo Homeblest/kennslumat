@@ -59,7 +59,7 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
 
     if ($window.sessionStorage.role !== 'admin') {
-        console.log("Unauthorized user, redirect");
+        console.log("Unauthorized user in adminDashboard, redirect");
         $state.go("loginView");
     }
     $scope.goToCreateTemplateView = function() {
@@ -79,9 +79,10 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
 evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
 
     if ($window.sessionStorage.role !== 'admin') {
-        console.log("Unauthorized user, redirect");
+        console.log("Unauthorized user in createTemplateController, redirect");
         $state.go("loginView");
     }
+
     $scope.template = {
         ID: null,
         Title: "",
@@ -92,7 +93,7 @@ evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state"
         TeacherQuestions: []
     };
 
-    $scope.showForm = true;
+    $rootScope.showForm = true;
 
     $scope.questionTypes = ["text", "single", "multiple"];
 
@@ -107,7 +108,6 @@ evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state"
             Type: _type,
             Answers: []
         });
-        //console.log("Added course question number: " + $scope.courseQuestionsID + " and it is of type: " + $scope.courseQuestions[$scope.courseQuestionsID].Type);
         $scope.courseQuestionsID += 1;
     };
 
@@ -122,7 +122,6 @@ evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state"
             Type: _type,
             Answers: []
         });
-        //console.log("Added teacher question number: " + $scope.teacherQuestionsID + " and it is of type: " + $scope.teacherQuestions[$scope.teacherQuestionsID].Type);
         $scope.teacherQuestionsID += 1;
     };
 
@@ -137,19 +136,10 @@ evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state"
             ImageURL: "",
             Weight: 0
         });
-        //console.log($scope.template);
     };
 
     $scope.sendTemplate = function() {
-        mainFactory.sendTemplate($scope.template)
-            .success(function(data, status, headers, config) {
-                console.log("SUCCESS: evaluationtemplate sent with status " + status);
-                console.log($scope.template);
-                $scope.showForm = false;
-            })
-            .error(function(data, status, headers, config) {
-                console.log("ERROR: evaluationtemplate errored with status " + status);
-            });
+        mainFactory.sendTemplate($scope.template);
     };
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", function($scope, $rootScope, $http, $state, $window, mainFactory) {
@@ -192,42 +182,18 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$
 
     $scope.isSuccess = false;
     $scope.loginData = {};
-    $scope.error = false;
+    $rootScope.error = false;
 
     /*
         Fills the loginData object with user and pass,
         then calls the login function in the factory.
     */
-    $scope.login = function() {
+    $scope.callLogin = function() {
 
         $scope.loginData.user = $scope.username;
         $scope.loginData.pass = $scope.password;
 
-        mainFactory.login($scope.loginData)
-            .success(function(data) {
-                // Store the token in the window session
-                $window.sessionStorage.token = data.Token;
-
-                $window.sessionStorage.username = data.User.FullName;
-
-                $window.sessionStorage.role = data.User.Role;
-
-                if (data.User.Role == "admin") {
-                    // If user is admin, redirect to the admin page.
-                    $state.go("adminDashboard");
-                } else {
-                    // If normal user, redirect to overview.
-                    $state.go("evalOverView");
-                }
-            })
-            .error(function(data, status, headers, config) {
-                // Erase the token if user fails to log in
-                delete $window.sessionStorage.token;
-                delete $window.sessionStorage.username;
-
-                $scope.error = true;
-                
-            });
+        mainFactory.login($scope.loginData);
     };
 
 }]);
@@ -257,7 +223,7 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
 evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", "$window", function($scope, $rootScope, $state, mainFactory, $stateParams, $window) {
 
     if ($window.sessionStorage.role !== 'admin') {
-        console.log("Unauthorized user, redirect");
+        console.log("Unauthorized user in viewTemplate, redirect");
         $state.go("loginView");
     }
     // The template ID should now be in state params
@@ -366,17 +332,49 @@ evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($roo
 evalApp.config(["$httpProvider", function($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 }]);
-evalApp.factory('mainFactory', ["$http", function($http) {
+evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", function($http, $window, $state, $rootScope) {
     var server = "http://localhost:19358/api/v1/";
     return {
         login: function(loginData) {
-            return $http.post(server + "login", loginData);
+            return $http.post(server + "login", loginData)
+                .success(function(data) {
+                    // Store the token and user data in the window session
+                    $window.sessionStorage.token = data.Token;
+
+                    $window.sessionStorage.username = data.User.FullName;
+
+                    $window.sessionStorage.role = data.User.Role;
+
+                    if (data.User.Role == "admin") {
+                        // If user is admin, redirect to the admin page.
+                        $state.go("adminDashboard");
+                    } else {
+                        // If normal user, redirect to overview.
+                        $state.go("evalOverView");
+                    }
+                })
+                .error(function(data, status, headers, config) {
+                    // Erase the token if user fails to log in
+                    delete $window.sessionStorage.token;
+                    delete $window.sessionStorage.username;
+
+                    $rootScope.error = true;
+
+                });
         },
         getCourses: function() {
-            $http.get(server + 'my/courses');
+            return $http.get(server + 'my/courses');
         },
         sendTemplate: function(template) {
-            return $http.post(server + "evaluationtemplates", template);
+            return $http.post(server + "evaluationtemplates", template)
+                .success(function(data, status, headers, config) {
+                    console.log("SUCCESS: evaluationtemplate sent with status " + status);
+                    console.log($scope.template);
+                    $rootScope.showForm = false;
+                })
+                .error(function(data, status, headers, config) {
+                    console.log("ERROR: evaluationtemplate errored with status " + status);
+                });
         },
         getAllTemplates: function() {
             return $http.get(server + "evaluationtemplates");

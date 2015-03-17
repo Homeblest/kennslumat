@@ -1,7 +1,7 @@
 evalApp.controller('viewTemplateController', function($scope, $rootScope, $state, mainFactory, $stateParams, $window) {
 
     if ($window.sessionStorage.role !== 'admin') {
-        console.log("Unauthorized user, redirect");
+        console.log("Unauthorized user in viewTemplate, redirect");
         $state.go("loginView");
     }
     // The template ID should now be in state params

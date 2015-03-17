@@ -21,29 +21,25 @@ describe('loginController:', function() {
                         Role: "admin"
                     }
                 };
-            },
-            getCourses: function() {
             }
-        };
-        spyOn(fakeFactory, 'login').and.callThrough();
-        spyOn(scope, 'login').and.callThrough();
+        }
     });
 
-    //Inject fake factory into controller
-    beforeEach(inject(function($controller, $rootScope, mainFactory, $window, $state) {
-        window = $window;
-        state = $state;
-        rootScope = $rootScope;
-        scope = $rootScope.$new();
+    beforeEach(inject(function($injector) {
+
+        scope = $injector.get('$rootScope');
+        $controller = $injector.get('$controller');
+        httpBackend = $injector.get('$httpBackend');
         controller = $controller('loginController', {
             $scope: scope,
-            $rootScope: rootScope,
-            mainFactory: fakeFactory,
-            $window: window,
-            $state: state
+            mainFactory: fakeFactory
         });
 
+        spyOn(scope, "callLogin").and.callThrough();
+        spyOn(fakeFactory, 'login').and.callThrough();
+
     }));
+
 
     it('isSuccess should be false', function() {
         expect(scope.isSuccess).toBe(false);
@@ -56,11 +52,13 @@ describe('loginController:', function() {
     it('login function should call service', function() {
 
         // fill username and pass with static data
-        scope.username = "hjaltil13";
+        scope.username = "admin";
         scope.password = "12345";
-        console.log(scope);
+
         // Execute the login function
-        scope.login();
+        scope.callLogin();
+
+        expect(scope.callLogin).toHaveBeenCalled();
 
         // Expect the login function to have called the login service
         expect(fakeFactory.login).toHaveBeenCalled();
@@ -69,9 +67,9 @@ describe('loginController:', function() {
         httpBackend.expectPOST('http://localhost:19358/api/v1/login', scope.loginData);
 
         // Expect the controller to have filled in the object.
-        expect(scope.loginData.user).toBe('hjaltil13');
+        expect(scope.loginData.user).toBe('admin');
         expect(scope.loginData.pass).toBe('12345');
-        
+
     });
 
 });
