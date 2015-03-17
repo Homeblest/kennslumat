@@ -297,7 +297,7 @@ evalApp.directive('ngQuestion', function() {
 	return {
 		restrict: 'E',
 		templateUrl: 'views/ngQuestion.html'
-	};
+      };
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
