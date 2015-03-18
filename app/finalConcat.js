@@ -56,10 +56,14 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             templateUrl: 'views/evaluation_TeacherQuestions.html'
         });
 }]);
-evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
 
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user in adminDashboard, redirect");
+        $state.go("loginView");
+    }
     $scope.goToCreateTemplateView = function() {
-    	console.log("running");
+        console.log("running");
         $state.go('createTemplateView');
     };
 
@@ -72,76 +76,70 @@ evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state"
     };
 
 }]);
-evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
 
-    $scope.template = {
-        ID: null,
-        Title: "",
-        TitleEN: "",
-        IntroText: "",
-        IntroTextEN: "",
-        CourseQuestions: [],
-        TeacherQuestions: []
-    };
+    // Template object constructor
+    function Template(_ID, _Title, _TitleEN, _IntroText, _IntroTextEN, _CourseQuestions, _TeacherQuestions) {
+        this.ID = _ID;
+        this.Title = _Title;
+        this.TitleEN = _TitleEN;
+        this.IntroText = _IntroText;
+        this.IntroTextEN = _IntroTextEN;
+        this.CourseQuestions = _CourseQuestions;
+        this.TeacherQuestions = _TeacherQuestions;
+    }
 
+    function Question(_ID, _Text, _TextEN, _ImageURL, _Type, _Answers) {
+        this.ID = _ID;
+        this.Text = _Text;
+        this.TextEN = _TextEN;
+        this.ImageURL = _ImageURL;
+        this.Type = _Type;
+        this.Answers = _Answers;
+    }
+
+    function Answer(_ID, _Text, _TextEN, _ImageURL, _Weight) {
+        this.ID = _ID;
+        this.Text = _Text;
+        this.TextEN = _TextEN;
+        this.ImageURL = _ImageURL;
+        this.Weight = _Weight;
+    }
+
+    // Create a new empty template
+    $scope.template = new Template(null, "", "", "", "", [], []);
     $scope.showForm = true;
-
     $scope.questionTypes = ["text", "single", "multiple"];
 
     $scope.courseQuestionsID = 0;
 
     $scope.addCourseQuestion = function(_type) {
-        $scope.template.CourseQuestions.push({
-            ID: $scope.courseQuestionsID,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Type: _type,
-            Answers: []
-        });
-        //console.log("Added course question number: " + $scope.courseQuestionsID + " and it is of type: " + $scope.courseQuestions[$scope.courseQuestionsID].Type);
+        var newQuestion = new Question($scope.courseQuestionsID, "", "", "", _type, []);
+        $scope.template.CourseQuestions.push(newQuestion);
         $scope.courseQuestionsID += 1;
     };
 
     $scope.teacherQuestionsID = 0;
 
     $scope.addTeacherQuestion = function(_type) {
-        $scope.template.TeacherQuestions.push({
-            ID: $scope.teacherQuestionsID,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Type: _type,
-            Answers: []
-        });
-        //console.log("Added teacher question number: " + $scope.teacherQuestionsID + " and it is of type: " + $scope.teacherQuestions[$scope.teacherQuestionsID].Type);
+        var newQuestion = new Question($scope.teacherQuestionsID, "", "", "", _type, []);
+        $scope.template.TeacherQuestions.push(newQuestion);
         $scope.teacherQuestionsID += 1;
     };
 
-    // Make sure there is at least one question form available.
+    // Make sure there is at least one teacher question form available.
     $scope.addTeacherQuestion($scope.questionTypes[0]);
 
     $scope.addAnswer = function(question) {
-        question.Answers.push({
-            ID: question.Answers.length,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Weight: 0
-        });
-        //console.log($scope.template);
+        var newAnswer = new Answer(question.Answers.length, "", "", "", 0);
+        question.Answers.push(newAnswer);
     };
 
     $scope.sendTemplate = function() {
-        mainFactory.sendTemplate($scope.template)
-            .success(function(data, status, headers, config) {
-                console.log("SUCCESS: evaluationtemplate sent with status " + status);
-                console.log($scope.template);
-                $scope.showForm = false;
-            })
-            .error(function(data, status, headers, config) {
-                console.log("ERROR: evaluationtemplate errored with status " + status);
-            });
+        console.log($scope.template);
+        if(mainFactory.sendTemplate($scope.template)){
+            $scope.showForm = false;
+        }
     };
 }]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", function($scope, $rootScope, $http, $state, $window, mainFactory) {
@@ -200,16 +198,17 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
     // };
 
 }]);
-evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
+evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
     $scope.isSuccess = false;
     $scope.loginData = {};
+    $rootScope.error = false;
 
     /*
         Fills the loginData object with user and pass,
         then calls the login function in the factory.
     */
-    $scope.login = function() {
+    $scope.callLogin = function() {
 
         $scope.loginData.user = $scope.username;
         $scope.loginData.pass = $scope.password;
@@ -218,8 +217,12 @@ evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", fu
     };
 
 }]);
-evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
+evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", "$window", function($scope, $rootScope, $state, mainFactory, $stateParams, $window) {
 
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user, redirect");
+        $state.go("loginView");
+    }
     $scope.templates = [];
 
     mainFactory.getAllTemplates()
@@ -235,9 +238,14 @@ evalApp.controller('templateOverviewController', ["$scope", "$rootScope", "$stat
             "templateID": ID
         });
     };
-    
+
 }]);
-evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", function($scope, $rootScope, $state, mainFactory, $stateParams) {
+evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", "mainFactory", "$stateParams", "$window", function($scope, $rootScope, $state, mainFactory, $stateParams, $window) {
+
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user in viewTemplate, redirect");
+        $state.go("loginView");
+    }
     // The template ID should now be in state params
     $scope.templateID = $stateParams.templateID;
     $scope.template = {};
@@ -266,10 +274,10 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
     $scope.today();
 
     $scope.clear = function() {
-    	$scope.startDate = null;
-    	$scope.endDate = null;
+        $scope.startDate = null;
+        $scope.endDate = null;
     };
-    
+
     $scope.openStartDate = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -337,11 +345,15 @@ evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($roo
             }
             return config;
         },
+        requestError: function(rejection) {
+            return $q.reject(rejection);
+        },
+
         response: function(response) {
-            if (response.status === 401) {
-                //Handle the case where the user is not authorized
-            }
             return response || $q.when(response);
+        },
+        responseError: function(rejection) {
+            return $q.reject(rejection);
         }
     };
 }]);
@@ -349,17 +361,18 @@ evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($roo
 evalApp.config(["$httpProvider", function($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 }]);
-evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", function($http, $window, $rootScope, $state) {
+evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", function($http, $window, $state, $rootScope) {
     var server = "http://localhost:19358/api/v1/";
     return {
         login: function(loginData) {
-            // Log the user in, using the loginData object for authorization.
-            $http.post(server + "login", loginData)
+            return $http.post(server + "login", loginData)
                 .success(function(data) {
-                    // Store the token in the window session
+                    // Store the token and user data in the window session
                     $window.sessionStorage.token = data.Token;
 
                     $window.sessionStorage.username = data.User.FullName;
+
+                    $window.sessionStorage.role = data.User.Role;
 
                     if (data.User.Role == "admin") {
                         // If user is admin, redirect to the admin page.
@@ -372,12 +385,14 @@ evalApp.factory('mainFactory', ["$http", "$window", "$rootScope", "$state", func
                 .error(function(data, status, headers, config) {
                     // Erase the token if user fails to log in
                     delete $window.sessionStorage.token;
-                    // TODO: Log the errors in a better way
-                    console.log('Error: ' + status);
+                    delete $window.sessionStorage.username;
+
+                    $rootScope.error = true;
+
                 });
         },
         getCourses: function() {
-            $http.get(server + 'my/courses');
+            return $http.get(server + 'my/courses');
         },
         sendTemplate: function(template) {
             return $http.post(server + "evaluationtemplates", template);

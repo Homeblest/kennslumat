@@ -7,63 +7,47 @@ describe('createTemplateController: ', function() {
         controller,
         q,
         deferred,
-        httpBackend,
+        window,
         state;
 
     beforeEach(function() {
         fakeFactory = {
             login: function(loginData) {
-
-                deferred = q.defer();
-
-                // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
-            },
-            getCourses: function() {
-                deferred = q.defer();
-
-                // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
-            },
-            sendTemplate: function(template) {
-            	deferred = q.defer();
-
-                // Place the fake return object here
-                deferred.resolve();
-
-                return deferred.promise;
+                return {
+                    Token: "myToken",
+                    User: {
+                        FullName: "Administrator",
+                        Role: "admin"
+                    }
+                };
             }
-        };
-        spyOn(fakeFactory, 'sendTemplate').and.callThrough();
-        spyOn(fakeFactory, 'getCourses').and.callThrough();
+        }
     });
 
-    //Inject fake factory into controller
-    beforeEach(inject(function($rootScope, $controller, $q, mainFactory, $httpBackend, $state) {
-        httpBackend = $httpBackend;
-        rootScope = $rootScope;
-        scope = $rootScope.$new();
-        q = $q;
-        state = $state
+    beforeEach(inject(function($injector) {
+
+        scope = $injector.get('$rootScope');
+        $controller = $injector.get('$controller');
+        httpBackend = $injector.get('$httpBackend');
+        window = $injector.get('$window');
+        window.sessionStorage.role = 'admin';
         controller = $controller('createTemplateController', {
             $scope: scope,
             mainFactory: fakeFactory,
-            $rootScope: rootScope,
-            $state: state
+            $window: window
         });
+
+        spyOn(scope, "addCourseQuestion").and.callThrough();
+        spyOn(scope, "addTeacherQuestion").and.callThrough();
+        spyOn(scope, "sendTemplate").and.callThrough();
+        spyOn(scope, "addAnswer").and.callThrough();
+        spyOn(fakeFactory, 'login').and.callThrough();
     }));
 
-    it("should define template", function() {
-        expect(scope.template).toBeDefined();
-    });
-
-    it("should initialize showform as true and courseQuestionsID as 0", function() {
+    it("should initialize values correctly", function() {
         expect(scope.showForm).toBeTruthy();
         expect(scope.courseQuestionsID).toBe(0);
+        expect(scope.teacherQuestionsID).toBe(1);
     });
 
     it("should initialize questionTypes with values", function() {
@@ -76,14 +60,8 @@ describe('createTemplateController: ', function() {
         scope.addCourseQuestion("text");
         expect(scope.template.CourseQuestions.length).toBe(1);
     });
-/*
-    it("should call factory when sendTemplate is called", function() {
-    	scope.$apply(function(){
-    		scope.sendTemplate();
-    	});
-        expect(fakeFactory.sendTemplate).toHaveBeenCalled();
-        httpBackend.expectPOST('http://localhost:19358/api/v1/evaluationtemplates', scope.template);
-    });
-*/
 
+    it("should push a new answer into question's answer array", function() {
+        
+    })
 });

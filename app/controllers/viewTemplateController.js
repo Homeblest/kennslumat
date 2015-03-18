@@ -1,4 +1,9 @@
-evalApp.controller('viewTemplateController', function($scope, $rootScope, $state, mainFactory, $stateParams) {
+evalApp.controller('viewTemplateController', function($scope, $rootScope, $state, mainFactory, $stateParams, $window) {
+
+    if ($window.sessionStorage.role !== 'admin') {
+        console.log("Unauthorized user in viewTemplate, redirect");
+        $state.go("loginView");
+    }
     // The template ID should now be in state params
     $scope.templateID = $stateParams.templateID;
     $scope.template = {};
@@ -27,10 +32,10 @@ evalApp.controller('viewTemplateController', function($scope, $rootScope, $state
     $scope.today();
 
     $scope.clear = function() {
-    	$scope.startDate = null;
-    	$scope.endDate = null;
+        $scope.startDate = null;
+        $scope.endDate = null;
     };
-    
+
     $scope.openStartDate = function($event) {
         $event.preventDefault();
         $event.stopPropagation();

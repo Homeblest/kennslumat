@@ -1,72 +1,66 @@
-evalApp.controller('createTemplateController', function($scope, $rootScope, $state, mainFactory) {
+evalApp.controller('createTemplateController', function($scope, $rootScope, $state, mainFactory, $window) {
 
-    $scope.template = {
-        ID: null,
-        Title: "",
-        TitleEN: "",
-        IntroText: "",
-        IntroTextEN: "",
-        CourseQuestions: [],
-        TeacherQuestions: []
-    };
+    // Template object constructor
+    function Template(_ID, _Title, _TitleEN, _IntroText, _IntroTextEN, _CourseQuestions, _TeacherQuestions) {
+        this.ID = _ID;
+        this.Title = _Title;
+        this.TitleEN = _TitleEN;
+        this.IntroText = _IntroText;
+        this.IntroTextEN = _IntroTextEN;
+        this.CourseQuestions = _CourseQuestions;
+        this.TeacherQuestions = _TeacherQuestions;
+    }
 
+    function Question(_ID, _Text, _TextEN, _ImageURL, _Type, _Answers) {
+        this.ID = _ID;
+        this.Text = _Text;
+        this.TextEN = _TextEN;
+        this.ImageURL = _ImageURL;
+        this.Type = _Type;
+        this.Answers = _Answers;
+    }
+
+    function Answer(_ID, _Text, _TextEN, _ImageURL, _Weight) {
+        this.ID = _ID;
+        this.Text = _Text;
+        this.TextEN = _TextEN;
+        this.ImageURL = _ImageURL;
+        this.Weight = _Weight;
+    }
+
+    // Create a new empty template
+    $scope.template = new Template(null, "", "", "", "", [], []);
     $scope.showForm = true;
-
     $scope.questionTypes = ["text", "single", "multiple"];
 
     $scope.courseQuestionsID = 0;
 
     $scope.addCourseQuestion = function(_type) {
-        $scope.template.CourseQuestions.push({
-            ID: $scope.courseQuestionsID,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Type: _type,
-            Answers: []
-        });
-        //console.log("Added course question number: " + $scope.courseQuestionsID + " and it is of type: " + $scope.courseQuestions[$scope.courseQuestionsID].Type);
+        var newQuestion = new Question($scope.courseQuestionsID, "", "", "", _type, []);
+        $scope.template.CourseQuestions.push(newQuestion);
         $scope.courseQuestionsID += 1;
     };
 
     $scope.teacherQuestionsID = 0;
 
     $scope.addTeacherQuestion = function(_type) {
-        $scope.template.TeacherQuestions.push({
-            ID: $scope.teacherQuestionsID,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Type: _type,
-            Answers: []
-        });
-        //console.log("Added teacher question number: " + $scope.teacherQuestionsID + " and it is of type: " + $scope.teacherQuestions[$scope.teacherQuestionsID].Type);
+        var newQuestion = new Question($scope.teacherQuestionsID, "", "", "", _type, []);
+        $scope.template.TeacherQuestions.push(newQuestion);
         $scope.teacherQuestionsID += 1;
     };
 
-    // Make sure there is at least one question form available.
+    // Make sure there is at least one teacher question form available.
     $scope.addTeacherQuestion($scope.questionTypes[0]);
 
     $scope.addAnswer = function(question) {
-        question.Answers.push({
-            ID: question.Answers.length,
-            Text: "",
-            TextEN: "",
-            ImageURL: "",
-            Weight: 0
-        });
-        //console.log($scope.template);
+        var newAnswer = new Answer(question.Answers.length, "", "", "", 0);
+        question.Answers.push(newAnswer);
     };
 
     $scope.sendTemplate = function() {
-        mainFactory.sendTemplate($scope.template)
-            .success(function(data, status, headers, config) {
-                console.log("SUCCESS: evaluationtemplate sent with status " + status);
-                console.log($scope.template);
-                $scope.showForm = false;
-            })
-            .error(function(data, status, headers, config) {
-                console.log("ERROR: evaluationtemplate errored with status " + status);
-            });
+        console.log($scope.template);
+        if(mainFactory.sendTemplate($scope.template)){
+            $scope.showForm = false;
+        }
     };
 });
