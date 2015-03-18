@@ -18,24 +18,25 @@ evalApp.directive('ngQuestion', function() {
                 }
             }
 
-            scope.sendUpdate = function(tSSN) {
+            scope.sendUpdate = function() {
             	if (scope.question.Type === "multiple") {
             		scope.question.val = scope.question.checkBoxes;
             	}
 
+            	if (scope.$parent.teacher === undefined) {
+            		scope.tSSN = undefined;
+            	}
+            	else {
+            		scope.tSSN = scope.$parent.teacher.SSN;
+            	}
+
                 var questionResult = {
                     QuestionID: scope.question.ID,
-                    TeacherSSN: tSSN,
+                    TeacherSSN: scope.tSSN,
                     Value: scope.question.val
                 };
                 scope.$parent.updateQuestions(questionResult);
             };
-
-   //         	scope.sendUpdate = function(tSSN) {
-			// 	var questionResult = {QuestionID: scope.question.ID, TeacherSSN: tSSN, Value: scope.question.val};
-			// 	scope.$parent.$parent.$parent.updateQuestions(questionResult);
-			// };
-    
 
         }
     };

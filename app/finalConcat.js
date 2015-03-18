@@ -174,32 +174,39 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
     $state.go('evaluationView.IntroText');
     var CourseQuestionAnswers = [];
     var TeacherQuestionAnswers = [];
-
-    mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
-        .success(function(data) {
-            $scope.evaluation = data;
-        });
+   	var teacherCounter = 0;
 
     mainFactory.getTeachersByCourse($stateParams.course, $stateParams.semester)
         .success(function(data){
             $scope.teachers = data;
-            fillIn();
         });
+
+    mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
+        .success(function(data) {
+            $scope.evaluation = data;
+            //fillIn();
+        });
+
     $scope.updateQuestions = function (qResult) {
-    	CourseQuestionAnswers[qResult.QuestionID - 1] = qResult;
+    	if (qResult.TeacherSSN === undefined) {
+    		CourseQuestionAnswers[qResult.QuestionID - 1] = qResult;
+    	}
+    	else {
+    		TeacherQuestionAnswers[teacherCounter++] = qResult;
+    	}
     };
 
-    var fillIn = function() {
-    	for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
-			var CourseQuestionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
-			CourseQuestionAnswers.push(CourseQuestionResult);
-      	}
+   //  var fillIn = function() {
+   //  	for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
+			// var CourseQuestionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
+			// CourseQuestionAnswers.push(CourseQuestionResult);
+   //    	}
 
-      	for (var j = 0; ($scope.evaluation.TeacherQuestions.length * $scope.teachers.length) > j; j++) {
-			var TeacherQuestionResult = {QuestionID: $scope.evaluation.TeacherQuestions.ID, TeacherSSN: "", Value: ""}; 
-			TeacherQuestionAnswers.push(TeacherQuestionResult);
-      	}
-    };
+   //    	for (var j = 0; ($scope.evaluation.TeacherQuestions.length * $scope.teachers.length) > j; j++) {
+			// var TeacherQuestionResult = {QuestionID: $scope.evaluation.TeacherQuestions.ID, TeacherSSN: "", Value: ""}; 
+			// TeacherQuestionAnswers.push(TeacherQuestionResult);
+   //    	}
+   //  };
 
     // $scope.processForm = function() {
     // 	fillIn();
@@ -349,24 +356,25 @@ evalApp.directive('ngQuestion', function() {
                 }
             }
 
-            scope.sendUpdate = function(tSSN) {
+            scope.sendUpdate = function() {
             	if (scope.question.Type === "multiple") {
             		scope.question.val = scope.question.checkBoxes;
             	}
 
+            	if (scope.$parent.teacher === undefined) {
+            		scope.tSSN = undefined;
+            	}
+            	else {
+            		scope.tSSN = scope.$parent.teacher.SSN;
+            	}
+
                 var questionResult = {
                     QuestionID: scope.question.ID,
-                    TeacherSSN: tSSN,
+                    TeacherSSN: scope.tSSN,
                     Value: scope.question.val
                 };
                 scope.$parent.updateQuestions(questionResult);
             };
-
-   //         	scope.sendUpdate = function(tSSN) {
-			// 	var questionResult = {QuestionID: scope.question.ID, TeacherSSN: tSSN, Value: scope.question.val};
-			// 	scope.$parent.$parent.$parent.updateQuestions(questionResult);
-			// };
-    
 
         }
     };
