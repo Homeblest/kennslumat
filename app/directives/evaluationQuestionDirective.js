@@ -8,10 +8,10 @@ evalApp.directive('ngQuestion', function() {
         },
         link: function(scope, element, attrs) {
 
-            scope.sendUpdate = function() {
+            scope.sendUpdate = function(tSSN) {
                 var questionResult = {
                     QuestionID: scope.question.ID,
-                    TeacherSSN: "",
+                    TeacherSSN: tSSN,
                     Value: scope.question.val
                 };
                 scope.$parent.updateQuestions(questionResult);
