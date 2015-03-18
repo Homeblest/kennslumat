@@ -1,9 +1,9 @@
 evalApp.controller('evaluationController', function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
 
     $state.go('evaluationView.IntroText');
-    var CourseQuestionAnswers = [];
-    var TeacherQuestionAnswers = [];
-   	var teacherCounter = 0;
+    var QuestionAnswers = [];
+   	var qCounter = 0;
+   	var firstQuestion = 0;
 
     mainFactory.getTeachersByCourse($stateParams.course, $stateParams.semester)
         .success(function(data){
@@ -13,18 +13,25 @@ evalApp.controller('evaluationController', function($scope, $rootScope, $http, $
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
             $scope.evaluation = data;
+            if ($scope.evaluation.CourseQuestions.length === 0) {
+            	if ($scope.evaluation.TeacherQuestions.length === 0) {
+            		firstQuestion = 0;
+            	}
+            	else {
+            		firstQuestion = $scope.evaluation.TeacherQuestions[0].ID;
+            	}
+            }
+            else {
+            	firstQuestion = $scope.evaluation.CourseQuestions[0].ID;
+            }
         });
 
     $scope.updateQuestions = function (qResult) {
-    	if (qResult.TeacherSSN === undefined) {
-    		CourseQuestionAnswers[qResult.QuestionID - 1] = qResult;
-    	}
-    	else {
-    		TeacherQuestionAnswers[teacherCounter++] = qResult;
-    	}
+    	QuestionAnswers[qResult.QuestionID - firstQuestion] = qResult;
     };
 
     $scope.processForm = function() {
+
         $state.go("evaluationView.evaluationCompletion");
     };
 
