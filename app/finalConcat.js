@@ -350,6 +350,9 @@ evalApp.directive('ngQuestion', function() {
             }
 
             scope.sendUpdate = function(tSSN) {
+            	if (scope.question.Type === "multiple") {
+            		scope.question.val = scope.question.checkBoxes;
+            	}
 
                 var questionResult = {
                     QuestionID: scope.question.ID,
@@ -357,7 +360,6 @@ evalApp.directive('ngQuestion', function() {
                     Value: scope.question.val
                 };
                 scope.$parent.updateQuestions(questionResult);
-                console.log(scope.question.checkBoxes);
             };
 
    //         	scope.sendUpdate = function(tSSN) {
