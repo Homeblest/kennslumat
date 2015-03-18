@@ -142,6 +142,20 @@ evalApp.controller('createTemplateController', ["$scope", "$rootScope", "$state"
         }
     };
 }]);
+evalApp.controller('directiveController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
+
+	function EvaluationAnswerDTO(_QuestionID, _TeacherSSN, _Value) {
+        this.QuestionID = _QuestionID;
+        this.TeacherSSN = _TeacherSSN;
+        this.Value = _Value;
+    }
+
+    $scope.logChore = function(id, chore) {
+    	var answerDTO = new EvaluationAnswerDTO(id, null, chore);
+    	console.log(answerDTO);
+    	$scope.answerArray.push(answerDTO);
+    };
+}]);
 evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", function($scope, $rootScope, $http, $state, $window, mainFactory) {
     $scope.username = $window.sessionStorage.username;
     $scope.myEvaluations = [];
@@ -171,33 +185,18 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 }]);
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
 
-    function EvaluationAnswerDTO(_QuestionID, _TeacherSSN, _Value) {
-        this.QuestionID = _QuestionID;
-        this.TeacherSSN = _TeacherSSN;
-        this.Value = _Value;
-    }
-
     $state.go('evaluationView.IntroText');
-
-    $scope.courseAnswersArray = [];
 
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
             $scope.evaluation = data;
-
-            if (typeof $scope.evaluation.CourseQuestions.length !== 0) {
-                for (var i = 0; i < $scope.evaluation.CourseQuestions.length; i++) {
-                    var newAnswer = new EvaluationAnswerDTO(i, null, "");
-                    $scope.courseAnswersArray.push(newAnswer);
-                }
-            }
-
         });
 
-    $scope.printArray = function() {
-        console.log($scope.courseAnswersArray);
-    };
+    $scope.answerArray = [];
 
+    $scope.printArray = function() {
+    	console.log($scope.answerArray);
+    };
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
@@ -325,10 +324,12 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 evalApp.directive('ngQuestion', function() {
     return {
         restrict: 'E',
-        templateUrl: 'views/ngQuestion.html',
-        link: function(scope, element, attr) {
-        	
-        }
+        scope: {
+        	done: '&',
+        	question: '=',
+        	answerArray: '='
+        },
+        templateUrl: 'views/ngQuestion.html'
     };
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
