@@ -182,7 +182,6 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
 
     $scope.updateQuestions = function (qResult) {
     	ListOfQuestionAnswers[qResult.QuestionID - 1] = qResult;
-    	console.log(qResult);
     };
 
     var fillIn = function() {
@@ -322,18 +321,40 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 
 }]);
 evalApp.directive('ngQuestion', function() {
-	return {
-		restrict: 'E',
-		templateUrl: 'views/ngQuestion.html',
-		scope: {
-			question: "=ngModel",
-		},
-		link: function (scope, element, attrs) {
-			scope.sendUpdate = function() {
-				var questionResult = {QuestionID: scope.question.ID, TeacherSSN: "", Value: scope.question.val};
-				scope.$parent.$parent.$parent.updateQuestions(questionResult);
-			};
-		}
+    return {
+        restrict: 'E',
+        templateUrl: 'views/ngQuestion.html',
+        scope: {
+            question: "=ngModel",
+        },
+        link: function(scope, element, attrs) {
+
+            var checkboxes = [];
+
+            if (scope.question.Type === 'multiple') {
+                for (var i = 0; i < scope.question.Answers.length; ++i) {
+                    checkboxes.push({
+                        ID: scope.question.Answers[i].ID,
+                        Text: scope.question.Answers[i].Text,
+                        TextEN: scope.question.Answers[i].TextEN,
+                        ImageURL: scope.question.Answers[i].ImageURL,
+                        Weight: scope.question.Answers[i].Weight,
+                        checked: false
+                    });
+                }
+                console.log(checkboxes);
+            }
+
+
+            scope.sendUpdate = function() {
+                var questionResult = {
+                    QuestionID: scope.question.ID,
+                    TeacherSSN: "",
+                    Value: scope.question.val
+                };
+                scope.$parent.updateQuestions(questionResult);
+            };
+        }
     };
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {

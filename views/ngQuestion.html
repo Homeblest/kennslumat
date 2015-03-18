@@ -38,7 +38,7 @@
 
 		<div ng-if="question.Type === 'multiple'" class="col-md-5 btn-group-vertical">
 			<label ng-repeat="answer in question.Answers" class="btn btn-default">
-				<input type="checkbox" name="checkboxQuestion" value="{{answer.ID}}" ng-model="question.val" ng-change="sendUpdate()"/>
+				<input type="checkbox" name="checkboxQuestion" value="{{answer.ID}}" ng-model="answer.checkBoxes[answer.ID].checked" ng-change="sendUpdate()"/>
 				{{answer.ID}} - {{answer.Text}}
 				<i> - {{answer.TextEN}}</i>
 				<img ng-if="answer.ImageURL !== ''" ng-src="{{answer.ImageURL}}" class="QuestionDirectiveAnsIMG"/>

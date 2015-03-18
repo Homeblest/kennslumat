@@ -11,7 +11,6 @@ evalApp.controller('evaluationController', function($scope, $rootScope, $http, $
 
     $scope.updateQuestions = function (qResult) {
     	ListOfQuestionAnswers[qResult.QuestionID - 1] = qResult;
-    	console.log(qResult);
     };
 
     var fillIn = function() {
