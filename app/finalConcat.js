@@ -457,7 +457,7 @@ evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", func
             return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
         },
         sendEvaluationAnswer: function(course, semester, evalID, evaluationAnswer) {
-            return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
+            return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID, evaluationAnswer);
         }
     };
 }]);

@@ -53,7 +53,7 @@ evalApp.factory('mainFactory', function($http, $window, $state, $rootScope) {
             return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
         },
         sendEvaluationAnswer: function(course, semester, evalID, evaluationAnswer) {
-            return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
+            return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID, evaluationAnswer);
         }
     };
 });
