@@ -42,6 +42,7 @@ evalApp.controller('evaluationController', function($scope, $rootScope, $http, $
 
     $scope.processForm = function() {
         fillIn();
+        $state.go("evaluationView.evaluationCompletion");
     };
 
 });

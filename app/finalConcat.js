@@ -42,18 +42,22 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             templateUrl: "views/evaluationView.html",
             controller: 'evaluationController'
         })
-        // Nested states for evaluation
-        .state('evaluationView.IntroText', {
-            url: '/IntroText',
-            templateUrl: 'views/evaluation_IntroText.html'
-        })
-        .state('evaluationView.CourseQuestions',{
+    // Nested states for evaluation
+    .state('evaluationView.IntroText', {
+        url: '/IntroText',
+        templateUrl: 'views/evaluation_IntroText.html'
+    })
+        .state('evaluationView.CourseQuestions', {
             url: '/CourseQuestions',
             templateUrl: 'views/evaluation_CourseQuestions.html'
         })
-        .state('evaluationView.TeacherQuestions',{
+        .state('evaluationView.TeacherQuestions', {
             url: '/TeacherQuestions',
             templateUrl: 'views/evaluation_TeacherQuestions.html'
+        })
+        .state('evaluationView.evaluationCompletion', {
+            url: '/evaluationCompletion',
+            templateUrl: 'views/evaluation_evaluationCompletion.html'
         });
 }]);
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
@@ -170,7 +174,7 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 
 }]);
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
-    
+
     $state.go('evaluationView.IntroText');
     var CourseQuestionAnswers = [];
     var TeacherQuestionAnswers = [];
@@ -181,29 +185,40 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
         });
 
     mainFactory.getTeachersByCourse($stateParams.course, $stateParams.semester)
-        .success(function(data){
+        .success(function(data) {
             $scope.teachers = data;
             fillIn();
         });
-    $scope.updateQuestions = function (qResult) {
-    	CourseQuestionAnswers[qResult.QuestionID - 1] = qResult;
+
+    $scope.updateQuestions = function(qResult) {
+        CourseQuestionAnswers[qResult.QuestionID - 1] = qResult;
     };
 
     var fillIn = function() {
-    	for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
-			var CourseQuestionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
-			CourseQuestionAnswers.push(CourseQuestionResult);
-      	}
+        for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
+            var CourseQuestionResult = {
+                QuestionID: $scope.evaluation.CourseQuestions.ID,
+                TeacherSSN: "",
+                Value: ""
+            };
+            CourseQuestionAnswers.push(CourseQuestionResult);
+        }
 
-      	for (var j = 0; ($scope.evaluation.TeacherQuestions.length * $scope.teachers.length) > j; j++) {
-			var TeacherQuestionResult = {QuestionID: $scope.evaluation.TeacherQuestions.ID, TeacherSSN: "", Value: ""}; 
-			TeacherQuestionAnswers.push(TeacherQuestionResult);
-      	}
+        for (var j = 0;
+            ($scope.evaluation.TeacherQuestions.length * $scope.teachers.length) > j; j++) {
+            var TeacherQuestionResult = {
+                QuestionID: $scope.evaluation.TeacherQuestions.ID,
+                TeacherSSN: "",
+                Value: ""
+            };
+            TeacherQuestionAnswers.push(TeacherQuestionResult);
+        }
     };
 
-    // $scope.processForm = function() {
-    // 	fillIn();
-    // };
+    $scope.processForm = function() {
+        fillIn();
+        $state.go("evaluationView.evaluationCompletion");
+    };
 
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
@@ -362,10 +377,10 @@ evalApp.directive('ngQuestion', function() {
                 scope.$parent.updateQuestions(questionResult);
             };
 
-   //         	scope.sendUpdate = function(tSSN) {
+   			//  scope.sendUpdate = function(tSSN) {
 			// 	var questionResult = {QuestionID: scope.question.ID, TeacherSSN: tSSN, Value: scope.question.val};
 			// 	scope.$parent.$parent.$parent.updateQuestions(questionResult);
-			// };
+			//};
     
 
         }
@@ -449,6 +464,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", func
         },
         getTeachersByCourse: function(course, semester) {   
             return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
+        },
+        sendEvaluationAnswer: function(course, semester, evalID, evaluationAnswer) {
+            return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
         }
     };
 }]);
