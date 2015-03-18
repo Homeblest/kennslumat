@@ -42,6 +42,11 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             templateUrl: "views/evaluationView.html",
             controller: 'evaluationController'
         })
+        .state('evaluationResults', {
+            url: '/evaluationResults',
+            templateUrl: 'views/evaluationResults.html',
+            controller: 'evaluationResultsController'
+        })
     // Nested states for evaluation
     .state('evaluationView.IntroText', {
         url: '/IntroText',
@@ -210,6 +215,16 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
         $state.go("evaluationView.evaluationCompletion");
     };
 
+}]);
+evalApp.controller('evaluationResultsController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
+    mainFactory.getAllEvaluations()
+        .success(function(data) {
+            $scope.evaluations = data;
+        });
+
+    $scope.evaluationResults = [];
+
+    
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
@@ -453,11 +468,17 @@ evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", func
         getEvaluationByCourse: function(course, semester, evalID) {
             return $http.get(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
         },
-        getTeachersByCourse: function(course, semester) {   
+        getTeachersByCourse: function(course, semester) {
             return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
         },
         sendEvaluationAnswer: function(course, semester, evalID, evaluationAnswer) {
             return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID, evaluationAnswer);
+        },
+        getEvaluationResultsByID: function(ID) {
+            return $http.get(server + 'evaluations/' + ID);
+        },
+        getAllEvaluations: function() {
+            return $http.get(server + 'evaluations');
         }
     };
 }]);

@@ -49,11 +49,17 @@ evalApp.factory('mainFactory', function($http, $window, $state, $rootScope) {
         getEvaluationByCourse: function(course, semester, evalID) {
             return $http.get(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
         },
-        getTeachersByCourse: function(course, semester) {   
+        getTeachersByCourse: function(course, semester) {
             return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
         },
         sendEvaluationAnswer: function(course, semester, evalID, evaluationAnswer) {
             return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID, evaluationAnswer);
+        },
+        getEvaluationResultsByID: function(ID) {
+            return $http.get(server + 'evaluations/' + ID);
+        },
+        getAllEvaluations: function() {
+            return $http.get(server + 'evaluations');
         }
     };
 });

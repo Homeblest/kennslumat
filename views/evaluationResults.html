@@ -1,0 +1,33 @@
+<div class="row">
+	<div class="col-md-12 page-header">
+		<h1>All evaluation results</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table">
+			<caption>All evaluations</caption>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>TemplateTitle</th>
+					<th>TemplateTitleEN</th>
+					<th>StartDate</th>
+					<th>EndDate</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="evaluation in evaluations">
+					<td>{{evaluation.ID}}</td>
+					<td>{{evaluation.TemplateTitle}}</td>
+					<td>{{evaluation.TemplateTitleEN}}</td>
+					<td>{{evaluation.StartDate}}</td>
+					<td>{{evaluation.EndDate}}</td>
+					<td>{{evaluation.Status}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+

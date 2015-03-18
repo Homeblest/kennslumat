@@ -42,6 +42,11 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: "views/evaluationView.html",
             controller: 'evaluationController'
         })
+        .state('evaluationResults', {
+            url: '/evaluationResults',
+            templateUrl: 'views/evaluationResults.html',
+            controller: 'evaluationResultsController'
+        })
     // Nested states for evaluation
     .state('evaluationView.IntroText', {
         url: '/IntroText',
