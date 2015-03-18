@@ -21,7 +21,7 @@
 
 	<div class="row">
 		<div class="col-md-12" ng-if="question.Type === 'text'">
-			<textarea class="form-control" rows="4" placeholder="Type your answer here" ng-model="question.val" ng-change="sendUpdate()"></textarea>
+			<textarea required class="form-control" rows="4" placeholder="Type your answer here" ng-model="question.val" ng-change="sendUpdate()"></textarea>
 		</div>
 	</div>
 
@@ -29,7 +29,7 @@
 
 		<div ng-if="question.Type === 'single'" class="col-md-5 btn-group-vertical">
 			<label ng-repeat="answer in question.Answers" class="btn btn-default">
-				<input type="radio" name="radioQuestion" value="{{answer.ID}}" ng-model="question.val" ng-change="sendUpdate()"/>
+				<input required type="radio" name="radioQuestion" value="{{answer.ID}}" ng-model="question.val" ng-change="sendUpdate()"/>
 				{{answer.ID}}  -  {{answer.Text}}
 				<i> - {{answer.TextEN}}</i>
 				<img ng-if="answer.ImageURL !== ''" ng-src="{{answer.ImageURL}}" class="QuestionDirectiveAnsIMG"/>
@@ -38,7 +38,7 @@
 
 		<div ng-if="question.Type === 'multiple'" class="col-md-5 btn-group-vertical">
 			<label ng-repeat="answer in question.Answers" class="btn btn-default">
-				<input type="checkbox" name="checkboxQuestion" value="{{answer.ID}}" ng-model="question.checkBoxes[answer.ID].checked" ng-change="sendUpdate()"/>
+				<input required type="checkbox" name="checkboxQuestion" value="{{answer.ID}}" ng-model="question.checkBoxes[answer.ID].checked" ng-change="sendUpdate()"/>
 				{{answer.ID}} - {{answer.Text}}
 				<i> - {{answer.TextEN}}</i>
 				<img ng-if="answer.ImageURL !== ''" ng-src="{{answer.ImageURL}}" class="QuestionDirectiveAnsIMG"/>
