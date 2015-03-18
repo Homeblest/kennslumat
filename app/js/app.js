@@ -42,17 +42,21 @@ evalApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: "views/evaluationView.html",
             controller: 'evaluationController'
         })
-        // Nested states for evaluation
-        .state('evaluationView.IntroText', {
-            url: '/IntroText',
-            templateUrl: 'views/evaluation_IntroText.html'
-        })
-        .state('evaluationView.CourseQuestions',{
+    // Nested states for evaluation
+    .state('evaluationView.IntroText', {
+        url: '/IntroText',
+        templateUrl: 'views/evaluation_IntroText.html'
+    })
+        .state('evaluationView.CourseQuestions', {
             url: '/CourseQuestions',
             templateUrl: 'views/evaluation_CourseQuestions.html'
         })
-        .state('evaluationView.TeacherQuestions',{
+        .state('evaluationView.TeacherQuestions', {
             url: '/TeacherQuestions',
             templateUrl: 'views/evaluation_TeacherQuestions.html'
+        })
+        .state('evaluationView.evaluationCompletion', {
+            url: '/evaluationCompletion',
+            templateUrl: 'views/evaluation_evaluationCompletion.html'
         });
 });

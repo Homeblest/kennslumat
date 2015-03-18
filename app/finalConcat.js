@@ -42,18 +42,22 @@ evalApp.config(["$stateProvider", "$urlRouterProvider", function($stateProvider,
             templateUrl: "views/evaluationView.html",
             controller: 'evaluationController'
         })
-        // Nested states for evaluation
-        .state('evaluationView.IntroText', {
-            url: '/IntroText',
-            templateUrl: 'views/evaluation_IntroText.html'
-        })
-        .state('evaluationView.CourseQuestions',{
+    // Nested states for evaluation
+    .state('evaluationView.IntroText', {
+        url: '/IntroText',
+        templateUrl: 'views/evaluation_IntroText.html'
+    })
+        .state('evaluationView.CourseQuestions', {
             url: '/CourseQuestions',
             templateUrl: 'views/evaluation_CourseQuestions.html'
         })
-        .state('evaluationView.TeacherQuestions',{
+        .state('evaluationView.TeacherQuestions', {
             url: '/TeacherQuestions',
             templateUrl: 'views/evaluation_TeacherQuestions.html'
+        })
+        .state('evaluationView.evaluationCompletion', {
+            url: '/evaluationCompletion',
+            templateUrl: 'views/evaluation_evaluationCompletion.html'
         });
 }]);
 evalApp.controller('adminDashboardController', ["$scope", "$rootScope", "$state", "mainFactory", "$window", function($scope, $rootScope, $state, mainFactory, $window) {
@@ -170,7 +174,7 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 
 }]);
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
-    
+
     $state.go('evaluationView.IntroText');
     var CourseQuestionAnswers = [];
     var TeacherQuestionAnswers = [];
@@ -184,7 +188,6 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
             $scope.evaluation = data;
-            //fillIn();
         });
 
     $scope.updateQuestions = function (qResult) {
@@ -196,21 +199,9 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
     	}
     };
 
-   //  var fillIn = function() {
-   //  	for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
-			// var CourseQuestionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
-			// CourseQuestionAnswers.push(CourseQuestionResult);
-   //    	}
-
-   //    	for (var j = 0; ($scope.evaluation.TeacherQuestions.length * $scope.teachers.length) > j; j++) {
-			// var TeacherQuestionResult = {QuestionID: $scope.evaluation.TeacherQuestions.ID, TeacherSSN: "", Value: ""}; 
-			// TeacherQuestionAnswers.push(TeacherQuestionResult);
-   //    	}
-   //  };
-
-    // $scope.processForm = function() {
-    // 	fillIn();
-    // };
+    $scope.processForm = function() {
+        $state.go("evaluationView.evaluationCompletion");
+    };
 
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
@@ -457,6 +448,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", func
         },
         getTeachersByCourse: function(course, semester) {   
             return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
+        },
+        sendEvaluationAnswer: function(course, semester, evalID, evaluationAnswer) {
+            return $http.post(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
         }
     };
 }]);
