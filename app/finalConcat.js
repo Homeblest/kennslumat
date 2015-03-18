@@ -170,14 +170,34 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 
 }]);
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
+
+    function EvaluationAnswerDTO(_QuestionID, _TeacherSSN, _Value) {
+        this.QuestionID = _QuestionID;
+        this.TeacherSSN = _TeacherSSN;
+        this.Value = _Value;
+    }
+
     $state.go('evaluationView.IntroText');
-    $scope.evaluation = {};
 
-    var response = mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID);
+    $scope.courseAnswersArray = [];
 
-    response.success(function(data){
-    	$scope.evaluation = data;
-    });
+    mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
+        .success(function(data) {
+            $scope.evaluation = data;
+
+            if (typeof $scope.evaluation.CourseQuestions.length !== 0) {
+                for (var i = 0; i < $scope.evaluation.CourseQuestions.length; i++) {
+                    var newAnswer = new EvaluationAnswerDTO(i, null, "");
+                    $scope.courseAnswersArray.push(newAnswer);
+                }
+            }
+
+        });
+
+    $scope.printArray = function() {
+        console.log($scope.courseAnswersArray);
+    };
+
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
@@ -303,10 +323,13 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 
 }]);
 evalApp.directive('ngQuestion', function() {
-	return {
-		restrict: 'E',
-		templateUrl: 'views/ngQuestion.html'
-      };
+    return {
+        restrict: 'E',
+        templateUrl: 'views/ngQuestion.html',
+        link: function(scope, element, attr) {
+        	
+        }
+    };
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {
