@@ -1,4 +1,5 @@
 evalApp.directive('ngQuestion', function() {
+
     return {
         restrict: 'E',
         templateUrl: 'views/ngQuestion.html',
@@ -27,7 +28,15 @@ evalApp.directive('ngQuestion', function() {
                 console.log(scope.question.checkBoxes);
             };
 
+<<<<<<< HEAD
 
+=======
+   //         	scope.sendUpdate = function(tSSN) {
+			// 	var questionResult = {QuestionID: scope.question.ID, TeacherSSN: tSSN, Value: scope.question.val};
+			// 	scope.$parent.$parent.$parent.updateQuestions(questionResult);
+			// };
+    
+>>>>>>> origin/master
         }
     };
 });
