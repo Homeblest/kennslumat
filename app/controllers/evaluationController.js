@@ -31,7 +31,7 @@ evalApp.controller('evaluationController', function($scope, $rootScope, $http, $
     };
 
     $scope.processForm = function() {
-
+    	mainFactory.sendEvaluationAnswer($stateParams.course, $stateParams.semester, $stateParams.evaluationID, QuestionAnswers);
         $state.go("evaluationView.evaluationCompletion");
     };
 
