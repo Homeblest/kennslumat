@@ -179,25 +179,10 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
 
     $state.go('evaluationView.IntroText');
 
-    $scope.courseAnswersArray = [];
-
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
             $scope.evaluation = data;
-
-            if (typeof $scope.evaluation.CourseQuestions.length !== 0) {
-                for (var i = 0; i < $scope.evaluation.CourseQuestions.length; i++) {
-                    var newAnswer = new EvaluationAnswerDTO(i, null, "");
-                    $scope.courseAnswersArray.push(newAnswer);
-                }
-            }
-
         });
-
-    $scope.printArray = function() {
-        console.log($scope.courseAnswersArray);
-    };
-
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", "$window", "$state", function($scope, $rootScope, mainFactory, $window, $state) {
 
