@@ -172,13 +172,33 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 
 }]);
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
+    
     $state.go('evaluationView.IntroText');
-    $scope.evaluation = {};
+    var ListOfQuestionAnswers = [];
 
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
             $scope.evaluation = data;
+            fillIn();
         });
+
+    $scope.updateQuestions = function (qResult) {
+    	ListOfQuestionAnswers[qResult.QuestionID - 1] = qResult;
+    	console.log(qResult);
+    };
+
+    var fillIn = function() {
+    	for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
+			var questionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
+			ListOfQuestionAnswers.push(questionResult);
+      	}
+    };
+
+
+    // $scope.processForm = function() {
+    // 	fillIn();
+    // };
+
 }]);
 evalApp.controller('loginController', ["$scope", "$rootScope", "mainFactory", function($scope, $rootScope, mainFactory) {
 
@@ -296,8 +316,17 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 evalApp.directive('ngQuestion', function() {
 	return {
 		restrict: 'E',
-		templateUrl: 'views/ngQuestion.html'
-      };
+		templateUrl: 'views/ngQuestion.html',
+		scope: {
+			question: "=ngModel",
+		},
+		link: function (scope, element, attrs) {
+			scope.sendUpdate = function() {
+				var questionResult = {QuestionID: scope.question.ID, TeacherSSN: "", Value: scope.question.val};
+				scope.$parent.$parent.$parent.updateQuestions(questionResult);
+			};
+		}
+    };
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
     return {

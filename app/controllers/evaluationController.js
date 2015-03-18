@@ -1,9 +1,29 @@
 evalApp.controller('evaluationController', function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
+    
     $state.go('evaluationView.IntroText');
-    $scope.evaluation = {};
+    var ListOfQuestionAnswers = [];
 
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
             $scope.evaluation = data;
+            fillIn();
         });
+
+    $scope.updateQuestions = function (qResult) {
+    	ListOfQuestionAnswers[qResult.QuestionID - 1] = qResult;
+    	console.log(qResult);
+    };
+
+    var fillIn = function() {
+    	for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
+			var questionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
+			ListOfQuestionAnswers.push(questionResult);
+      	}
+    };
+
+
+    // $scope.processForm = function() {
+    // 	fillIn();
+    // };
+
 });
