@@ -12,7 +12,6 @@ evalApp.controller('evaluationController', function($scope, $rootScope, $http, $
 
     $scope.updateQuestions = function (qResult) {
     	CourseQuestionAnswers[qResult.QuestionID - 1] = qResult;
-    	console.log(qResult);
     };
 
     var fillIn = function() {
@@ -23,7 +22,10 @@ evalApp.controller('evaluationController', function($scope, $rootScope, $http, $
       	}
     };
 
-
+    mainFactory.getTeachersByCourse($stateParams.course, $stateParams.semester)
+        .success(function(data){
+            $scope.teachers = data;
+        });
     // $scope.processForm = function() {
     // 	fillIn();
     // };

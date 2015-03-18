@@ -194,7 +194,10 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
       	}
     };
 
-
+    mainFactory.getTeachersByCourse($stateParams.course, $stateParams.semester)
+        .success(function(data){
+            $scope.teachers = data;
+        });
     // $scope.processForm = function() {
     // 	fillIn();
     // };
@@ -324,18 +327,30 @@ evalApp.controller('viewTemplateController', ["$scope", "$rootScope", "$state", 
 
 }]);
 evalApp.directive('ngQuestion', function() {
-	return {
-		restrict: 'E',
-		templateUrl: 'views/ngQuestion.html',
-		scope: {
-			question: "=ngModel",
-		},
-		link: function (scope, element, attrs) {
-			scope.sendUpdate = function() {
-				var questionResult = {QuestionID: scope.question.ID, TeacherSSN: "", Value: scope.question.val};
-				scope.$parent.$parent.$parent.updateQuestions(questionResult);
-			};
-		}
+
+    return {
+        restrict: 'E',
+        templateUrl: 'views/ngQuestion.html',
+        scope: {
+            question: "=ngModel",
+        },
+        link: function(scope, element, attrs) {
+
+            scope.sendUpdate = function() {
+                var questionResult = {
+                    QuestionID: scope.question.ID,
+                    TeacherSSN: "",
+                    Value: scope.question.val
+                };
+                scope.$parent.updateQuestions(questionResult);
+            };
+
+   //         	scope.sendUpdate = function(tSSN) {
+			// 	var questionResult = {QuestionID: scope.question.ID, TeacherSSN: tSSN, Value: scope.question.val};
+			// 	scope.$parent.$parent.$parent.updateQuestions(questionResult);
+			// };
+    
+        }
     };
 });
 evalApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function($rootScope, $q, $window) {
@@ -413,6 +428,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", func
         },
         getEvaluationByCourse: function(course, semester, evalID) {
             return $http.get(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
+        },
+        getTeachersByCourse: function(course, semester) {   
+            return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
         }
     };
 }]);
