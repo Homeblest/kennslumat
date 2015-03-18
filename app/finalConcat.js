@@ -191,7 +191,10 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
       	}
     };
 
-
+    mainFactory.getTeachersByCourse($stateParams.course, $stateParams.semester)
+        .success(function(data){
+            $scope.teachers = data;
+        });
     // $scope.processForm = function() {
     // 	fillIn();
     // };
@@ -329,23 +332,6 @@ evalApp.directive('ngQuestion', function() {
         },
         link: function(scope, element, attrs) {
 
-            var checkboxes = [];
-
-            if (scope.question.Type === 'multiple') {
-                for (var i = 0; i < scope.question.Answers.length; ++i) {
-                    checkboxes.push({
-                        ID: scope.question.Answers[i].ID,
-                        Text: scope.question.Answers[i].Text,
-                        TextEN: scope.question.Answers[i].TextEN,
-                        ImageURL: scope.question.Answers[i].ImageURL,
-                        Weight: scope.question.Answers[i].Weight,
-                        checked: false
-                    });
-                }
-                console.log(checkboxes);
-            }
-
-
             scope.sendUpdate = function() {
                 var questionResult = {
                     QuestionID: scope.question.ID,
@@ -354,6 +340,8 @@ evalApp.directive('ngQuestion', function() {
                 };
                 scope.$parent.updateQuestions(questionResult);
             };
+
+            
         }
     };
 });
@@ -432,6 +420,9 @@ evalApp.factory('mainFactory', ["$http", "$window", "$state", "$rootScope", func
         },
         getEvaluationByCourse: function(course, semester, evalID) {
             return $http.get(server + 'courses/' + course + '/' + semester + '/evaluations/' + evalID);
+        },
+        getTeachersByCourse: function(course, semester) {   
+            return $http.get(server + 'courses/' + course + '/' + semester + '/teachers');
         }
     };
 }]);

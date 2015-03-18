@@ -1,7 +1,10 @@
-<div class="text-center">
-	<span class="glyphicon glyphicon-heart"></span>
+<div class="row">
+	<div class="col-md-12" ng-repeat="teacher in teachers">
+		<h4>{{teacher.FullName}}</h4><p>{{teacher.SSN}}</p>
+		<ng-question ng-repeat="question in evaluation.TeacherQuestions" ng-model="question"></ng-question>
+	</div>
 
-	<ng-question ng-repeat="question in evaluation.TeacherQuestions"></ng-question>
-	
+
+<div class="text-center">
 	<button type="submit" class="btn btn-danger">Submit</button>
 </div>

@@ -20,7 +20,10 @@ evalApp.controller('evaluationController', function($scope, $rootScope, $http, $
       	}
     };
 
-
+    mainFactory.getTeachersByCourse($stateParams.course, $stateParams.semester)
+        .success(function(data){
+            $scope.teachers = data;
+        });
     // $scope.processForm = function() {
     // 	fillIn();
     // };
