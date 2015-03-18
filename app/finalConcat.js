@@ -172,7 +172,8 @@ evalApp.controller('evalOverViewController', ["$scope", "$rootScope", "$http", "
 evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$state", "$window", "mainFactory", "$stateParams", function($scope, $rootScope, $http, $state, $window, mainFactory, $stateParams) {
     
     $state.go('evaluationView.IntroText');
-    var ListOfQuestionAnswers = [];
+    var CourseQuestionAnswers = [];
+    var TeacherQuestionAnswers = [];
 
     mainFactory.getEvaluationByCourse($stateParams.course, $stateParams.semester, $stateParams.evaluationID)
         .success(function(data) {
@@ -181,14 +182,15 @@ evalApp.controller('evaluationController', ["$scope", "$rootScope", "$http", "$s
         });
 
     $scope.updateQuestions = function (qResult) {
-    	ListOfQuestionAnswers[qResult.QuestionID - 1] = qResult;
+    	CourseQuestionAnswers[qResult.QuestionID - 1] = qResult;
     	console.log(qResult);
     };
 
     var fillIn = function() {
     	for (var i = 0; $scope.evaluation.CourseQuestions.length > i; i++) {
-			var questionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
-			ListOfQuestionAnswers.push(questionResult);
+			var CourseQuestionResult = {QuestionID: $scope.evaluation.CourseQuestions.ID, TeacherSSN: "", Value: ""}; 
+			CourseQuestionAnswers.push(CourseQuestionResult);
+			//TeacherQuestionAnswers.push(questionResult);
       	}
     };
 
