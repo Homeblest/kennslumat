@@ -31,10 +31,10 @@ evalApp.directive('ngQuestion', function() {
                 scope.$parent.updateQuestions(questionResult);
             };
 
-   //         	scope.sendUpdate = function(tSSN) {
+   			//  scope.sendUpdate = function(tSSN) {
 			// 	var questionResult = {QuestionID: scope.question.ID, TeacherSSN: tSSN, Value: scope.question.val};
 			// 	scope.$parent.$parent.$parent.updateQuestions(questionResult);
-			// };
+			//};
     
 
         }
