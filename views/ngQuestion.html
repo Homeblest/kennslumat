@@ -21,7 +21,7 @@
 
 	<div class="row">
 		<div class="col-md-12" ng-if="question.Type === 'text'">
-			<textarea ng-model="courseAnswersArray[question.ID - 1].Value"class="form-control" rows="4" placeholder="Type your answer here"></textarea>
+			<textarea class="form-control" rows="4" placeholder="Type your answer here"></textarea>
 		</div>
 	</div>
 
@@ -29,7 +29,7 @@
 
 		<div ng-if="question.Type === 'single'" class="col-md-5 btn-group-vertical">
 			<label ng-repeat="answer in question.Answers" class="btn btn-default">
-				<input type="radio" name="radioQuestion" value="{{answer.ID}}" ng-model="courseAnswersArray[question.ID - 1].Value"/>
+				<input type="radio" name="radioQuestion" value="{{answer.ID}}"/>
 				{{answer.ID}}  -  {{answer.Text}}
 				<i> - {{answer.TextEN}}</i>
 				<img ng-if="answer.ImageURL !== ''" ng-src="{{answer.ImageURL}}" class="QuestionDirectiveAnsIMG"/>
